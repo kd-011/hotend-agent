@@ -1,0 +1,24 @@
+# Install to /etc/systemd/system/hotend-agent.service, then:
+#   sudo systemctl enable --now hotend-agent
+#
+# Put your config in /etc/hotend-agent.env, e.g.:
+#   HOTEND_RELAY_URL=wss://relay.hotend.app/
+#   HOTEND_LOCAL_URL=http://127.0.0.1:7125
+# On the very first start, check the logs for the pairing code:
+#   journalctl -u hotend-agent -f
+
+[Unit]
+Description=Hotend printer agent
+After=network-online.target moonraker.service
+Wants=network-online.target
+
+[Service]
+# Run as the same user that owns your Klipper/Moonraker install (often "pi").
+User=pi
+EnvironmentFile=/etc/hotend-agent.env
+ExecStart=/usr/local/bin/hotend-agent
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

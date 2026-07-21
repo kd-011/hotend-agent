@@ -1,0 +1,7 @@
+# build output
+/dist/
+/hotend-agent
+/hotend-agent-linux-*
+
+# local agent state (printer id + device secret)
+.hotend-agent.json
