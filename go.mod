@@ -1,4 +1,4 @@
-module github.com/hotend-3dprinting/hotend-agent
+module hotend-agent
 
 go 1.22
 
