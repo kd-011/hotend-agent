@@ -1,0 +1,40 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  agent:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache-dependency-path: go.sum
+
+      - name: gofmt
+        run: test -z "$(gofmt -l .)" || { gofmt -l .; echo "run gofmt -w ."; exit 1; }
+
+      - name: vet
+        run: CGO_ENABLED=0 go vet ./...
+
+      # Built into the repo root, not dist/, because that is where the release
+      # guards in main_test.go look for them — elsewhere they silently skip, and a
+      # guard that skips is a guard that isn't protecting anything.
+      - name: build all shipped architectures
+        run: |
+          for arch in amd64 arm64 arm; do
+            CGO_ENABLED=0 GOOS=linux GOARCH=$arch go build -trimpath -ldflags "-s -w" -o "hotend-agent-linux-$arch" .
+            if file "hotend-agent-linux-$arch" | grep -q 'dynamically linked'; then
+              echo "hotend-agent-linux-$arch is dynamically linked — it would not start on an older printer image" >&2
+              exit 1
+            fi
+            ls -l "hotend-agent-linux-$arch"
+          done
+
+      - name: test
+        run: CGO_ENABLED=0 go test ./...

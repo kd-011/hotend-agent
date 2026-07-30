@@ -5,3 +5,4 @@
 
 # local agent state (printer id + device secret)
 .hotend-agent.json
+.config/hotend/

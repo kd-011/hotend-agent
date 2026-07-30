@@ -2,7 +2,7 @@
 #   sudo systemctl enable --now hotend-agent
 #
 # Put your config in /etc/hotend-agent.env, e.g.:
-#   HOTEND_RELAY_URL=wss://relay.hotend.app/
+#   HOTEND_RELAY_URL=wss://app.hotend.app/
 #   HOTEND_LOCAL_URL=http://127.0.0.1:7125
 # On the very first start, check the logs for the pairing code:
 #   journalctl -u hotend-agent -f

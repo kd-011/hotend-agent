@@ -33,20 +33,27 @@ printer.
 Only what the app requests, when it requests it:
 
 - Moonraker API traffic — status, temperatures, motion, macros, and uploading
-  g-code to start a print
+ g-code to start a print
 - Webcam frames — when you're watching the stream or the failure detector is on
 - Filament-usage totals — for Spoolman-style spool tracking
+- The agent's own version, on connect and on each update check, so the fleet's
+ update adoption is visible
 
 The agent starts no other outbound traffic. It does not read your filesystem
 beyond its own small state file, and it ships no analytics.
 
 ## Install
 
-Grab a prebuilt binary from the [releases](../../releases) page (Linux
-`amd64` / `armv7` / `arm64`), or build from source (below).
+The supported path, which fetches the current release, **verifies its signature**
+(see [Self-update](#self-update)) and installs a service:
 
 ```sh
-# put the binary somewhere on PATH
+curl -fsSL https://app.hotend.app/install | sh
+```
+
+Or build from source (below) and run it yourself:
+
+```sh
 sudo install -m755 hotend-agent /usr/local/bin/hotend-agent
 
 # minimal run — the app gives you the exact command (with the right relay URL)
@@ -68,31 +75,90 @@ Everything is an environment variable. Only `HOTEND_RELAY_URL` is required.
 | `HOTEND_LOCAL_URL` | `http://127.0.0.1:7125` | Your Moonraker API. |
 | `HOTEND_WEBCAM_URL` | `http://127.0.0.1:8080` | Webcam stream base (mjpg-streamer, crowsnest, …). |
 | `HOTEND_CLAIM` | *(none)* | One-time claim token to auto-link on first connect instead of reading a pairing code. |
-| `HOTEND_AGENT_STATE` | `~/.hotend-agent.json` | Where the printer ID and device secret are stored (mode `0600`). |
+| `HOTEND_AGENT_STATE` | `~/.config/hotend/agent.json` | Where the printer ID and device secret are stored (mode `0600`). |
 | `HOTEND_SPOOLMAN_PORT` | `7913` | Port for the local Spoolman-compatible endpoint Moonraker can point at. |
+
+### Your printer's identity lives outside the install directory
+
+`~/.config/hotend/agent.json` holds the printer ID and device secret, and it is
+deliberately **not** inside the install directory: reinstalling shouldn't cost you
+your pairing. Installs from before 2026.07.22 kept it at `~/.hotend-agent/agent.json`
+or `~/.hotend-agent.json`; the agent migrates from both automatically and never
+writes back to them.
+
+Delete that file and the printer is orphaned — the agent generates a new identity
+and needs a fresh pairing code, while the old printer stays in the app as
+permanently offline (remove it there). Two things worth knowing if you land in that
+state: run the agent as the same user every time, because as root the identity is
+`/root/.config/hotend/agent.json` rather than your own, and you can re-link without
+touching files by adding the printer in the app and passing the claim token it
+gives you:
+
+```sh
+HOTEND_CLAIM=<token> hotend-agent      # or re-run the installer, which does this for you
+```
+
+If the agent is running as a service, its pairing code is in the log:
+
+```sh
+journalctl --user -u hotend-agent -n 30 --no-pager
+```
+
+## Self-update
+
+The agent checks the relay for a newer build roughly every 6 hours (with jitter,
+so the fleet doesn't arrive at once). What it will accept is deliberately narrow:
+
+- **Signed, or refused.** Every release is signed offline with an ed25519 key whose
+ public half is compiled into this source (`updatePubKeysHex` in `main.go`). The
+ agent downloads the `.sig` beside the binary and verifies it over the exact bytes
+ before anything else. The signing key never touches the server that distributes
+ the binaries, so compromising the relay isn't enough to push code to your printer.
+ It's a list rather than one constant so a key can be rotated: ship a release
+ trusting old and new, wait for adoption, then sign with the new one.
+- **Run-and-report.** The downloaded binary must execute and report the version it
+ claims to be before it replaces anything.
+- **Atomically, then re-exec.** The swap is a rename, and the agent then execs the
+ new binary in place. It doesn't depend on a service manager to restart it, so this
+ works even when it's running in a plain shell, and there's no window where your
+ printer is offline.
+- **Reversible.** The replaced binary is kept. If the new one can't reach the relay
+ within 15 minutes or 3 restarts, the agent puts the old one back and refuses to
+ install that version again.
+- **Forward-only.** A version that isn't strictly newer is ignored, so nobody can
+ push you *backwards* to an older build. (The flip side: a bad release is fixed by
+ publishing a higher version, not by re-publishing an old one.)
+
+To manage updates yourself, block the relay's `/agent-bin/` path.
+
+## Verify a release
+
+You don't have to take the above on faith — this checks what the server is
+actually serving against the keys in this source:
+
+```sh
+node scripts/verify-agent-release.mjs             # what the world is served
+node scripts/verify-agent-release.mjs --local     # …and that it matches your build
+```
+
+It downloads each architecture's binary and signature, verifies the signature over
+the bytes, and confirms the advertised version matches this tree.
 
 ## Build from source
 
 Requires Go 1.22+.
 
 ```sh
-go build -o hotend-agent .
+make            # host build
+make dist       # linux amd64, armv7, arm64 into ./dist
+go test ./...
 ```
 
-Cross-compile for a Pi:
-
-```sh
-make            # builds amd64, armv7 and arm64 into ./dist
-```
-
-## Self-update
-
-The agent checks the relay for a newer build every 6 hours. It downloads to a
-temp file, runs it once and confirms it reports the expected version before
-atomically swapping it in — a bad download can never replace a working binary.
-It then exits and lets your service manager (`Restart=always`) relaunch it. If
-you'd rather manage updates yourself, run it under a manager that doesn't restart
-it, or block the relay's `/agent-bin/` path.
+Builds are static (`CGO_ENABLED=0`) and stripped of paths (`-trimpath`), which is
+what makes them reproducible — that's why `--local` above can compare your bytes to
+the published ones. Static also matters on its own: a dynamically linked build picks
+up the glibc of whatever machine compiled it and won't start on an older printer
+image.
 
 ## License
 
