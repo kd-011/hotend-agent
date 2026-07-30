@@ -112,10 +112,12 @@ so the fleet doesn't arrive at once). What it will accept is deliberately narrow
 - **Signed, or refused.** Every release is signed offline with an ed25519 key whose
  public half is compiled into this source (`updatePubKeysHex` in `main.go`). The
  agent downloads the `.sig` beside the binary and verifies it over the exact bytes
- before anything else. The signing key never touches the server that distributes
- the binaries, so compromising the relay isn't enough to push code to your printer.
- It's a list rather than one constant so a key can be rotated: ship a release
- trusting old and new, wait for adoption, then sign with the new one.
+ before anything else. Releases also publish a signed **manifest** that binds the
+ version string to each architecture's sha256 — so a compromised relay cannot pair
+ an old signed binary with a new version. The signing key never touches the server
+ that distributes the binaries. It's a list rather than one constant so a key can
+ be rotated: ship a release trusting old and new, wait for adoption, then sign
+ with the new one.
 - **Run-and-report.** The downloaded binary must execute and report the version it
  claims to be before it replaces anything.
 - **Atomically, then re-exec.** The swap is a rename, and the agent then execs the
@@ -142,7 +144,8 @@ node scripts/verify-agent-release.mjs --local     # …and that it matches your 
 ```
 
 It downloads each architecture's binary and signature, verifies the signature over
-the bytes, and confirms the advertised version matches this tree.
+the bytes, checks the signed release manifest (version ↔ sha256), and confirms the
+advertised version matches this tree.
 
 ## Build from source
 

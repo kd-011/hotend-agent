@@ -60,6 +60,43 @@ func TestTrustedKeysAreValid(t *testing.T) {
 	}
 }
 
+func TestParseReleaseManifest(t *testing.T) {
+	raw := []byte(`{
+  "version": "2026.07.30.5",
+  "files": {
+    "amd64": { "sha256": "abc", "size": 10 },
+    "arm64": { "sha256": "def", "size": 11 },
+    "arm": { "sha256": "ghi", "size": 12 }
+  }
+}`)
+	m, err := parseReleaseManifest(raw)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if m.Version != "2026.07.30.5" {
+		t.Fatalf("version = %q", m.Version)
+	}
+	if m.Files["amd64"].SHA256 != "abc" || m.Files["amd64"].Size != 10 {
+		t.Fatalf("amd64 entry = %+v", m.Files["amd64"])
+	}
+	if _, err := parseReleaseManifest([]byte(`{"version":"x"}`)); err == nil {
+		t.Fatal("expected error for missing files")
+	}
+}
+
+func TestSHA256Hex(t *testing.T) {
+	got := sha256Hex([]byte("hotend"))
+	if len(got) != 64 {
+		t.Fatalf("sha256 hex length = %d", len(got))
+	}
+	if sha256Hex([]byte("hotend")) != got {
+		t.Fatal("sha256Hex not stable")
+	}
+	if sha256Hex([]byte("hotend")) == sha256Hex([]byte("hotend!")) {
+		t.Fatal("different inputs produced same hash")
+	}
+}
+
 // The signatures scripts/sign-agent-release.mjs writes must verify against a key
 // baked into the agent — this is the interop check between Node's signer and Go's
 // verifier, run over the real release artifacts when they exist.

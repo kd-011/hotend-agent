@@ -8,6 +8,7 @@ import (
 	"context"
 	"crypto/ed25519"
 	"crypto/rand"
+	"crypto/sha256"
 	"encoding/base64"
 	"encoding/binary"
 	"encoding/hex"
@@ -32,7 +33,7 @@ import (
 
 // Bump on every agent release. Agents auto-update to whatever /agent-bin/version
 // advertises (see selfUpdate). Date-based so "newer" is obvious.
-const agentVersion = "2026.07.30.4"
+const agentVersion = "2026.07.30.5"
 
 // Updates must be SIGNED. The relay serves <binary>.sig — hex ed25519 over the
 // exact binary bytes — and selfUpdate refuses anything that doesn't verify
@@ -502,6 +503,76 @@ func versionNewer(a, b string) bool {
 	return false
 }
 
+// releaseManifest is the signed statement that binds an advertised version to
+// the exact bytes of each architecture's binary. Served as /agent-bin/manifest
+// (+ .sig). Signing the manifest (not just each binary) means a compromised
+// relay cannot pair yesterday's signed amd64 with today's version string.
+type releaseManifest struct {
+	Version string `json:"version"`
+	Files   map[string]struct {
+		SHA256 string `json:"sha256"`
+		Size   int64  `json:"size"`
+	} `json:"files"`
+}
+
+func parseReleaseManifest(raw []byte) (releaseManifest, error) {
+	var m releaseManifest
+	if err := json.Unmarshal(raw, &m); err != nil {
+		return m, err
+	}
+	if m.Version == "" || len(m.Files) == 0 {
+		return m, fmt.Errorf("manifest missing version or files")
+	}
+	return m, nil
+}
+
+func sha256Hex(data []byte) string {
+	sum := sha256.Sum256(data)
+	return hex.EncodeToString(sum[:])
+}
+
+// fetchReleaseManifest downloads and verifies the signed release manifest.
+// ok=false with a nil error means "not published" (404) — callers may fall back
+// for one transition release. Any other failure is fail-closed (non-nil error).
+func fetchReleaseManifest(cl *http.Client, httpBase, wantVersion string) (releaseManifest, bool, error) {
+	r, err := cl.Get(httpBase + "/agent-bin/manifest")
+	if err != nil {
+		return releaseManifest{}, false, err
+	}
+	defer r.Body.Close()
+	if r.StatusCode == http.StatusNotFound {
+		return releaseManifest{}, false, nil
+	}
+	if r.StatusCode != 200 {
+		return releaseManifest{}, false, fmt.Errorf("manifest HTTP %d", r.StatusCode)
+	}
+	raw, err := io.ReadAll(io.LimitReader(r.Body, 64<<10))
+	if err != nil || len(raw) == 0 {
+		return releaseManifest{}, false, fmt.Errorf("empty manifest")
+	}
+	rs, err := cl.Get(httpBase + "/agent-bin/manifest.sig")
+	if err != nil {
+		return releaseManifest{}, false, err
+	}
+	defer rs.Body.Close()
+	if rs.StatusCode != 200 {
+		return releaseManifest{}, false, fmt.Errorf("manifest.sig HTTP %d", rs.StatusCode)
+	}
+	sb, _ := io.ReadAll(io.LimitReader(rs.Body, 1024))
+	sig, err := hex.DecodeString(strings.TrimSpace(string(sb)))
+	if err != nil || len(sig) != ed25519.SignatureSize || !signedByTrustedKey(raw, sig) {
+		return releaseManifest{}, false, fmt.Errorf("manifest signature invalid")
+	}
+	m, err := parseReleaseManifest(raw)
+	if err != nil {
+		return releaseManifest{}, false, err
+	}
+	if m.Version != wantVersion {
+		return releaseManifest{}, false, fmt.Errorf("manifest version %q != advertised %q", m.Version, wantVersion)
+	}
+	return m, true, nil
+}
+
 // selfUpdate pulls a newer agent binary when the relay advertises one. It
 // downloads the binary, VERIFIES the release signature (offline key — see
 // updatePubKeyHex) and that the binary runs and reports the advertised version
@@ -547,6 +618,27 @@ func selfUpdate() {
 	if err != nil {
 		return
 	}
+	// Signed manifest binds version ↔ sha256 per arch. Required when present;
+	// 404 is tolerated only so THIS release can itself be installed by older
+	// agents that still only check per-binary .sig files. From the next publish
+	// onward the manifest is always there and a bad/missing one fails closed.
+	manifest, haveManifest, err := fetchReleaseManifest(cl, httpBase, latest)
+	if err != nil {
+		fmt.Printf("[agent] update %s FAILED release manifest check (%v) — refusing to install\n", latest, err)
+		return
+	}
+	var wantSHA string
+	var wantSize int64
+	if haveManifest {
+		file, ok := manifest.Files[runtime.GOARCH]
+		if !ok || file.SHA256 == "" {
+			fmt.Printf("[agent] update %s manifest has no entry for %s — refusing to install\n", latest, runtime.GOARCH)
+			return
+		}
+		wantSHA, wantSize = file.SHA256, file.Size
+	} else {
+		fmt.Printf("[agent] update %s has no signed manifest yet — falling back to per-binary signature\n", latest)
+	}
 	binName := "hotend-agent-linux-" + runtime.GOARCH
 	r2, err := cl.Get(httpBase + "/agent-bin/" + binName)
 	if err != nil || r2.StatusCode != 200 {
@@ -560,8 +652,19 @@ func selfUpdate() {
 	if err != nil || len(data) == 0 {
 		return
 	}
-	// Release signature — no valid sig, no install. Fail closed and say why:
-	// this is the line that makes a compromised relay unable to push code.
+	if wantSHA != "" {
+		if got := sha256Hex(data); got != wantSHA {
+			fmt.Printf("[agent] update %s FAILED manifest hash check (got %s, want %s) — refusing to install\n", latest, got[:12], wantSHA[:12])
+			return
+		}
+		if wantSize > 0 && int64(len(data)) != wantSize {
+			fmt.Printf("[agent] update %s FAILED manifest size check — refusing to install\n", latest)
+			return
+		}
+	}
+	// Per-binary release signature — kept as defense in depth beside the manifest.
+	// No valid sig, no install. Fail closed and say why: this is the line that
+	// makes a compromised relay unable to push code.
 	r3, err := cl.Get(httpBase + "/agent-bin/" + binName + ".sig")
 	if err != nil || r3.StatusCode != 200 {
 		if r3 != nil {

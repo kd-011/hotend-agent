@@ -15,7 +15,7 @@
 //   node scripts/verify-agent-release.mjs --local              # verify the local build dir too
 //
 // Exit 0 = every arch verifies and self-reports the advertised version.
-import { verify, createPublicKey } from 'node:crypto'
+import { verify, createPublicKey, createHash } from 'node:crypto'
 import { readFileSync, existsSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -84,6 +84,39 @@ note(/^[0-9]{4}(\.[0-9]{1,4}){1,3}$/.test(served), `advertised version: ${served
 const inSource = readFileSync(join(AGENT_DIR, 'main.go'), 'utf8').match(/agentVersion\s*=\s*"([0-9.]+)"/)?.[1]
 note(inSource === served, `agent-go/main.go says ${inSource}, relay advertises ${served}`)
 
+// Signed manifest (when published) must verify and match the advertised version
+// and each binary's sha256. Older releases may 404 — that's a soft skip.
+let manifest = null
+{
+  let manRaw, manSig
+  try {
+    manRaw = await get('/agent-bin/manifest')
+    manSig = Buffer.from((await get('/agent-bin/manifest.sig', { text: true })), 'hex')
+  } catch (e) {
+    if (String(e.message).includes('HTTP 404')) {
+      console.log('  skip  signed manifest not published yet')
+    } else {
+      note(false, `manifest: ${e.message}`)
+    }
+    manRaw = null
+  }
+  if (manRaw) {
+    const good = manSig.length === 64 && KEYS.some((k) => verify(null, manRaw, k, manSig))
+    note(good, `manifest signature ${good ? 'verifies' : 'DOES NOT VERIFY'}`)
+    let man
+    try { man = JSON.parse(manRaw.toString('utf8')) } catch { man = null }
+    note(!!man?.version, `manifest parses (version ${man?.version || '?'})`)
+    if (man) {
+      note(man.version === served, `manifest version ${man.version} matches advertised ${served}`)
+      for (const arch of ARCHES) {
+        const entry = man.files?.[arch]
+        note(!!entry?.sha256, `manifest lists ${arch}`)
+      }
+      manifest = man
+    }
+  }
+}
+
 for (const arch of ARCHES) {
   const name = `hotend-agent-linux-${arch}`
   let bin, sig
@@ -93,6 +126,13 @@ for (const arch of ARCHES) {
   } catch (e) { note(false, `${arch}: ${e.message}`); continue }
   const good = sig.length === 64 && KEYS.some((k) => verify(null, bin, k, sig))
   note(good, `${arch}: ${bin.length} bytes, signature ${good ? 'verifies' : 'DOES NOT VERIFY'}`)
+  if (manifest?.files?.[arch]?.sha256) {
+    const got = createHash('sha256').update(bin).digest('hex')
+    note(got === manifest.files[arch].sha256, `${arch}: bytes match signed manifest hash`)
+    if (manifest.files[arch].size) {
+      note(bin.length === manifest.files[arch].size, `${arch}: size matches manifest`)
+    }
+  }
   if (alsoLocal) {
     const local = join(AGENT_DIR, name)
     note(existsSync(local) && readFileSync(local).equals(bin), `${arch}: served bytes match the local build`)
