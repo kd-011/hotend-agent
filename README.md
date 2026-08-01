@@ -190,9 +190,19 @@ make dist       # linux amd64, armv7, arm64 into ./dist
 go test ./...
 ```
 
-Builds are static (`CGO_ENABLED=0`) and stripped of paths (`-trimpath`), which is
-what makes them reproducible — that's why `--local` above can compare your bytes to
-the published ones. Static also matters on its own: a dynamically linked build picks
+Builds are static (`CGO_ENABLED=0`), stripped of paths (`-trimpath`), and carry no
+VCS stamp (`-buildvcs=false`), which is what makes them reproducible — that's why
+`--local` above can compare your bytes to the published ones.
+
+One sharp edge for byte-identical reproduction: use the **official go.dev
+toolchain** for the exact version a release was built with (currently `go1.22.2`,
+pinned in the [reproducible workflow](.github/workflows/reproducible.yml)).
+Distro packages that report the same version — Ubuntu's `golang-1.22` is one —
+are patched compilers that emit different (equally functional) bytes and will
+fail the comparison. Any Go 1.22+ still builds a perfectly working agent; the
+exact-toolchain rule only matters when you're checking bytes. The `reproducible`
+workflow does this check on a GitHub-hosted runner for every release, so you can
+also just look for the green run. Static also matters on its own: a dynamically linked build picks
 up the glibc of whatever machine compiled it and won't start on an older printer
 image.
 

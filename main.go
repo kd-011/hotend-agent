@@ -33,7 +33,7 @@ import (
 
 // Bump on every agent release. Agents auto-update to whatever /agent-bin/version
 // advertises (see selfUpdate). Date-based so "newer" is obvious.
-const agentVersion = "2026.08.01.2"
+const agentVersion = "2026.08.01.3"
 
 // Updates must be SIGNED. The relay serves <binary>.sig — hex ed25519 over the
 // exact binary bytes — and selfUpdate refuses anything that doesn't verify
