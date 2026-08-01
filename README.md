@@ -65,12 +65,19 @@ skipped verification when it was — that gap is gone.)
 Or build from source (below) and run it yourself:
 
 ```sh
-sudo install -m755 hotend-agent /usr/local/bin/hotend-agent
+# Install into a directory YOUR user owns — self-update swaps the binary in
+# place, so the running user must be able to write it. No root anywhere.
+install -Dm755 hotend-agent ~/.hotend-agent/hotend-agent
 
 # minimal run — the app gives you the exact command (with the right relay URL)
 # when you add a printer, so you normally won't type this by hand
-HOTEND_RELAY_URL=wss://app.hotend.app/ hotend-agent
+HOTEND_RELAY_URL=wss://app.hotend.app/ ~/.hotend-agent/hotend-agent
 ```
+
+If you prefer a root-owned binary in `/usr/local/bin`, that works too — but the
+agent (correctly) cannot self-update a file it doesn't own, so set
+`HOTEND_AGENT_AUTO_UPDATE=off` and update by reinstalling. **Don't run the agent
+as root to make self-update work**; it needs no privileges at all.
 
 On first start it prints a pairing code; enter it in the app under **Add
 printer**. To run it unattended, use the systemd unit in
@@ -130,7 +137,10 @@ so the fleet doesn't arrive at once). What it will accept is deliberately narrow
  be rotated: ship a release trusting old and new, wait for adoption, then sign
  with the new one.
 - **Run-and-report.** The downloaded binary must execute and report the version it
- claims to be before it replaces anything.
+ claims to be before it replaces anything. This runs *after* the signature and
+ manifest checks — the agent never executes bytes that haven't already verified
+ against the pinned keys — and the version it reports is cross-checked against
+ the signed manifest, not taken on faith.
 - **Atomically, then re-exec.** The swap is a rename, and the agent then execs the
  new binary in place. It doesn't depend on a service manager to restart it, so this
  works even when it's running in a plain shell, and there's no window where your

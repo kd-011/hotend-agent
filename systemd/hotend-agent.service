@@ -6,6 +6,17 @@
 #   HOTEND_LOCAL_URL=http://127.0.0.1:7125
 # On the very first start, check the logs for the pairing code:
 #   journalctl -u hotend-agent -f
+#
+# The binary lives in the service user's HOME, not /usr/local/bin, on purpose:
+# self-update swaps the binary in place, so the running user must own the file
+# and its directory. NEVER fix that by running the service as root — the agent
+# needs no privileges at all. If you'd rather have a root-owned binary that the
+# agent cannot touch, put it in /usr/local/bin AND set
+# Environment=HOTEND_AGENT_AUTO_UPDATE=off — self-update would fail against a
+# root-owned path anyway (it fails safe, nothing breaks), so turn it off and
+# update by reinstalling.
+# (The supported `curl | sh` installer sets all of this up as a *user* unit in
+# ~/.config/systemd/user instead; this file is for people wiring it by hand.)
 
 [Unit]
 Description=Hotend printer agent
@@ -16,9 +27,10 @@ Wants=network-online.target
 # Run as the same user that owns your Klipper/Moonraker install (often "pi").
 User=pi
 EnvironmentFile=/etc/hotend-agent.env
-ExecStart=/usr/local/bin/hotend-agent
+ExecStart=/home/pi/.hotend-agent/hotend-agent
 Restart=always
 RestartSec=5
+NoNewPrivileges=true
 
 [Install]
 WantedBy=multi-user.target
