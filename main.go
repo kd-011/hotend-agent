@@ -33,7 +33,7 @@ import (
 
 // Bump on every agent release. Agents auto-update to whatever /agent-bin/version
 // advertises (see selfUpdate). Date-based so "newer" is obvious.
-const agentVersion = "2026.07.30.5"
+const agentVersion = "2026.08.01.1"
 
 // Updates must be SIGNED. The relay serves <binary>.sig — hex ed25519 over the
 // exact binary bytes — and selfUpdate refuses anything that doesn't verify
@@ -47,7 +47,12 @@ const agentVersion = "2026.07.30.5"
 // adopt it, then publish one signed by the new key and drop the old entry. With a
 // single key there is no path off it — a lost key means no more updates, ever.
 var updatePubKeysHex = []string{
+	// Primary — signs every routine release (~/.config/hotend/agent-signing.pem).
 	"6ebe81a90a883f61d6ca9c1947de6fce4b591c895f1c8cc7812e08311394af68",
+	// Disaster-recovery backup — private half lives OFFLINE, physically separate
+	// from the primary. Only ever used to sign the release that rotates off a
+	// lost or compromised primary. Losing one key no longer strands the fleet.
+	"fa752823ce4cdeea2fda15a7ac297b1595d63fdc52a8f3f37fa5ab31ef5d0525",
 }
 
 func env(k, def string) string {
