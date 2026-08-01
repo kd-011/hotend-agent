@@ -1,0 +1,78 @@
+# Rebuilds every release from the tagged source on GitHub's own runners and
+# fails if the bytes differ from the published assets. This is what turns
+# "the builds are reproducible" from a claim into a check nobody involved in
+# shipping the release can fake: the runner is not the machine the release was
+# built or signed on.
+name: reproducible
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: release tag to verify (e.g. v2026.08.01.2)
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  rebuild-and-compare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: resolve tag
+        id: tag
+        run: echo "tag=${{ github.event.release.tag_name || inputs.tag }}" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.tag.outputs.tag }}
+
+      - uses: actions/setup-go@v5
+        with:
+          # Byte-identical output needs the exact toolchain the release was
+          # built with — a different patch version may legitimately produce
+          # different (equally correct) bytes and would fail the comparison.
+          go-version: '1.22.2'
+          cache-dependency-path: go.sum
+
+      - name: rebuild all shipped architectures from this tag
+        run: |
+          for arch in amd64 arm64 arm; do
+            CGO_ENABLED=0 GOOS=linux GOARCH=$arch GOARM=7 \
+              go build -trimpath -buildvcs=false -ldflags "-s -w" -o "rebuilt-$arch" .
+          done
+
+      - name: download the published release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release download "${{ steps.tag.outputs.tag }}" -p 'hotend-agent-linux-*' -p 'manifest*' -D published
+
+      - name: rebuilt bytes match published bytes
+        run: |
+          fail=0
+          for arch in amd64 arm64 arm; do
+            a=$(sha256sum "rebuilt-$arch" | cut -d' ' -f1)
+            b=$(sha256sum "published/hotend-agent-linux-$arch" | cut -d' ' -f1)
+            if [ "$a" = "$b" ]; then echo "OK   $arch  $a"
+            else echo "FAIL $arch  rebuilt=$a published=$b"; fail=1; fi
+          done
+          exit $fail
+
+      - name: release signatures verify against the keys in this source
+        run: |
+          go build -o vsig ./verify-sig
+          keys=$(grep -oE '"[0-9a-f]{64}"' main.go | tr -d '"' | tr '\n' ' ')
+          for f in published/hotend-agent-linux-amd64 published/hotend-agent-linux-arm64 published/hotend-agent-linux-arm published/manifest; do
+            ./vsig "$f" "$f.sig" $keys
+            echo "sig OK  $f"
+          done
+
+      - name: signed manifest hashes match the published binaries
+        run: |
+          for arch in amd64 arm64 arm; do
+            want=$(jq -r ".files.$arch.sha256" published/manifest)
+            got=$(sha256sum "published/hotend-agent-linux-$arch" | cut -d' ' -f1)
+            [ "$want" = "$got" ] && echo "manifest OK  $arch" || { echo "manifest MISMATCH  $arch"; exit 1; }
+          done

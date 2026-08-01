@@ -28,7 +28,7 @@ jobs:
       - name: build all shipped architectures
         run: |
           for arch in amd64 arm64 arm; do
-            CGO_ENABLED=0 GOOS=linux GOARCH=$arch go build -trimpath -ldflags "-s -w" -o "hotend-agent-linux-$arch" .
+            CGO_ENABLED=0 GOOS=linux GOARCH=$arch go build -trimpath -buildvcs=false -ldflags "-s -w" -o "hotend-agent-linux-$arch" .
             if file "hotend-agent-linux-$arch" | grep -q 'dynamically linked'; then
               echo "hotend-agent-linux-$arch is dynamically linked — it would not start on an older printer image" >&2
               exit 1

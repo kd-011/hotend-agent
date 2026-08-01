@@ -6,8 +6,11 @@ LDFLAGS := -s -w
 #             refuses to start on an older printer image
 #   trimpath— no local filesystem paths baked in, which is what makes the build
 #             reproducible so anyone can compare their bytes to a published release
+#   -buildvcs=false — no git-revision stamp, so a rebuild of this tree produces
+#             byte-identical binaries to the published release regardless of
+#             which clone (or mirror) it's built from
 GO := CGO_ENABLED=0 go
-BUILDFLAGS := -trimpath -ldflags "$(LDFLAGS)"
+BUILDFLAGS := -trimpath -buildvcs=false -ldflags "$(LDFLAGS)"
 
 .PHONY: build dist test clean
 
