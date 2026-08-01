@@ -262,3 +262,39 @@ func TestJitterStaysInRange(t *testing.T) {
 		}
 	}
 }
+
+// Regression: ISSUE-004 — found by /qa on 2026-08-01. The proxied path arrives
+// percent-encoded; assigning it to url.URL.Path (the DECODED field) made
+// String() escape the '%' again, so "%20" went out as "%2520" and Moonraker
+// 404'd every file whose name contains a space or '+' — roughly half a real
+// g-code library, plus the matching timelapses and thumbnails.
+func TestBuildLocalURLPreservesEncoding(t *testing.T) {
+	const base = "http://127.0.0.1:7125"
+	cases := []struct {
+		name, in, want string
+	}{
+		{"space", "/server/files/gcodes/My%20Print.gcode", base + "/server/files/gcodes/My%20Print.gcode"},
+		{"plus", "/server/files/timelapse/153-00-02%2B-%2BDietro.mp4", base + "/server/files/timelapse/153-00-02%2B-%2BDietro.mp4"},
+		{"literal plus", "/server/files/gcodes/Perfect+clip.gcode", base + "/server/files/gcodes/Perfect+clip.gcode"},
+		{"nested dirs", "/server/files/gcodes/Cable%20Management/Clip.gcode", base + "/server/files/gcodes/Cable%20Management/Clip.gcode"},
+		{"plain", "/server/files/gcodes/plain_name.gcode", base + "/server/files/gcodes/plain_name.gcode"},
+		{"query kept", "/server/files/list?root=gcodes", base + "/server/files/list?root=gcodes"},
+		{"encoded path with query", "/server/files/metadata?filename=My%20Print.gcode", base + "/server/files/metadata?filename=My%20Print.gcode"},
+	}
+	for _, c := range cases {
+		got, err := buildLocalURL(base, c.in)
+		if err != nil {
+			t.Errorf("%s: buildLocalURL(%q) errored: %v", c.name, c.in, err)
+			continue
+		}
+		if got != c.want {
+			t.Errorf("%s: buildLocalURL(%q) = %q, want %q", c.name, c.in, got, c.want)
+		}
+	}
+	// Paths that could escape the host or aren't a path at all stay rejected.
+	for _, bad := range []string{"relative/path", "//evil.example.com/x", "/\\evil"} {
+		if _, err := buildLocalURL(base, bad); err == nil {
+			t.Errorf("buildLocalURL(%q) should have been rejected", bad)
+		}
+	}
+}

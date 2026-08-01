@@ -33,7 +33,7 @@ import (
 
 // Bump on every agent release. Agents auto-update to whatever /agent-bin/version
 // advertises (see selfUpdate). Date-based so "newer" is obvious.
-const agentVersion = "2026.08.01.4"
+const agentVersion = "2026.08.01.5"
 
 // Updates must be SIGNED. The relay serves <binary>.sig — hex ed25519 over the
 // exact binary bytes — and selfUpdate refuses anything that doesn't verify
@@ -1319,7 +1319,18 @@ func buildLocalURL(base, p string) (string, error) {
 	if i := strings.IndexByte(p, '?'); i >= 0 {
 		rawPath, rawQuery = p[:i], p[i+1:]
 	}
-	u.Path = rawPath
+	// The path arrives ALREADY percent-encoded. url.URL.Path holds the DECODED
+	// path, so assigning the encoded string there makes String() escape the '%'
+	// itself — "%20" became "%2520" and Moonraker 404'd every file whose name
+	// contains a space or '+' (about half a typical g-code library, plus their
+	// timelapses and thumbnails). Set both fields: RawPath preserves the exact
+	// bytes, Path keeps them consistent so EscapedPath() trusts RawPath.
+	decoded, err := url.PathUnescape(rawPath)
+	if err != nil {
+		return "", fmt.Errorf("bad request path %q: %w", p, err)
+	}
+	u.Path = decoded
+	u.RawPath = rawPath
 	u.RawQuery = rawQuery
 	return u.String(), nil
 }
