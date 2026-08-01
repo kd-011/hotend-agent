@@ -25,11 +25,28 @@ jobs:
         id: tag
         run: echo "tag=${{ github.event.release.tag_name || inputs.tag }}" >> "$GITHUB_OUTPUT"
 
+      # Releases before v2026.08.01.4 predate the reproducible pipeline (they
+      # were built before the toolchain was pinned) and can never byte-match a
+      # rebuild. Verifying them would only produce a red X that says nothing —
+      # so say the true thing instead and stop.
+      - name: this release predates reproducible builds?
+        id: era
+        run: |
+          t="${{ steps.tag.outputs.tag }}"; t="${t#v}"; base="2026.08.01.4"
+          if [ "$t" != "$base" ] && [ "$(printf '%s\n' "$t" "$base" | sort -V | head -1)" = "$t" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::${t} predates the reproducible pipeline (first reproducible release: v${base}) — nothing to verify."
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/checkout@v4
+        if: steps.era.outputs.skip != 'true'
         with:
           ref: ${{ steps.tag.outputs.tag }}
 
       - uses: actions/setup-go@v5
+        if: steps.era.outputs.skip != 'true'
         with:
           # Byte-identical output needs the exact toolchain the release was
           # built with — a different patch version may legitimately produce
@@ -38,6 +55,7 @@ jobs:
           cache-dependency-path: go.sum
 
       - name: rebuild all shipped architectures from this tag
+        if: steps.era.outputs.skip != 'true'
         run: |
           for arch in amd64 arm64 arm; do
             CGO_ENABLED=0 GOOS=linux GOARCH=$arch GOARM=7 \
@@ -45,11 +63,13 @@ jobs:
           done
 
       - name: download the published release assets
+        if: steps.era.outputs.skip != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release download "${{ steps.tag.outputs.tag }}" -p 'hotend-agent-linux-*' -p 'manifest*' -D published
 
       - name: rebuilt bytes match published bytes
+        if: steps.era.outputs.skip != 'true'
         run: |
           fail=0
           for arch in amd64 arm64 arm; do
@@ -61,6 +81,7 @@ jobs:
           exit $fail
 
       - name: release signatures verify against the keys in this source
+        if: steps.era.outputs.skip != 'true'
         run: |
           go build -o vsig ./verify-sig
           keys=$(grep -oE '"[0-9a-f]{64}"' main.go | tr -d '"' | tr '\n' ' ')
@@ -70,6 +91,7 @@ jobs:
           done
 
       - name: signed manifest hashes match the published binaries
+        if: steps.era.outputs.skip != 'true'
         run: |
           for arch in amd64 arm64 arm; do
             want=$(jq -r ".files.$arch.sha256" published/manifest)
