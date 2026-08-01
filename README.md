@@ -95,6 +95,7 @@ Everything is an environment variable. Only `HOTEND_RELAY_URL` is required.
 | `HOTEND_CLAIM` | *(none)* | One-time claim token to auto-link on first connect instead of reading a pairing code. |
 | `HOTEND_AGENT_STATE` | `~/.config/hotend/agent.json` | Where the printer ID and device secret are stored (mode `0600`). |
 | `HOTEND_SPOOLMAN_PORT` | `7913` | Port for the local Spoolman-compatible endpoint Moonraker can point at. |
+| `HOTEND_AGENT_AUTO_UPDATE` | `on` | Set to `off` to disable self-update entirely — a local kill switch that works even if you trust nothing the relay says. Cloud access is unaffected. |
 
 ### Your printer's identity lives outside the install directory
 
@@ -152,7 +153,10 @@ so the fleet doesn't arrive at once). What it will accept is deliberately narrow
  push you *backwards* to an older build. (The flip side: a bad release is fixed by
  publishing a higher version, not by re-publishing an old one.)
 
-To manage updates yourself, block the relay's `/agent-bin/` path.
+To manage updates yourself, set `HOTEND_AGENT_AUTO_UPDATE=off` (a local kill
+switch the relay can't override), block the relay's `/agent-bin/` path at your
+firewall, or build from source and install by hand. All three leave cloud
+access working — the agent just stops updating.
 
 ## Verify a release
 
