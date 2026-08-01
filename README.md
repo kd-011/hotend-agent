@@ -51,6 +51,17 @@ The supported path, which fetches the current release, **verifies its signature*
 curl -fsSL https://app.hotend.app/install | sh
 ```
 
+First installs are verified **fail-closed**. The installer downloads the tiny
+dependency-free checker in [`verify-sig/`](verify-sig/) (served per-architecture
+beside the release) and verifies the agent binary's ed25519 signature against the
+keys pinned in the install script before anything is installed. A missing
+signature, an unfetchable checker, or a signature that doesn't verify all
+**refuse the install and change nothing** — there is no silent "couldn't check,
+so allow it". The only way past a failed check is the explicit opt-out
+`HOTEND_ALLOW_UNVERIFIED_INSTALL=1`. (Earlier installers shelled out to system
+openssl for this, which was missing or too old on some printer images and
+skipped verification when it was — that gap is gone.)
+
 Or build from source (below) and run it yourself:
 
 ```sh
@@ -146,6 +157,14 @@ node scripts/verify-agent-release.mjs --local     # …and that it matches your 
 It downloads each architecture's binary and signature, verifies the signature over
 the bytes, checks the signed release manifest (version ↔ sha256), and confirms the
 advertised version matches this tree.
+
+The installer's first-install check uses the same primitive without needing Node:
+[`verify-sig/`](verify-sig/) is a ~60-line static Go binary that does exactly one
+thing — verify an ed25519 signature over a file against a list of hex public keys
+— so what runs on your printer before the agent exists is just as auditable as
+the agent itself. (It is deliberately unsigned: it *is* the thing that checks
+signatures, so there is nothing upstream of it to verify it against — trust in it
+comes from HTTPS to the relay plus this source.)
 
 ## Build from source
 

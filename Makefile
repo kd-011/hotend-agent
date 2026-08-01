@@ -15,12 +15,16 @@ BUILDFLAGS := -trimpath -ldflags "$(LDFLAGS)"
 build:
 	$(GO) build $(BUILDFLAGS) -o $(BIN) .
 
-# Cross-compile the binaries a typical printer host needs.
+# Cross-compile the binaries a typical printer host needs, plus the
+# dependency-free signature checker the installer fetches (see verify-sig/).
 dist:
 	mkdir -p $(DIST)
 	GOOS=linux GOARCH=amd64 $(GO) build $(BUILDFLAGS) -o $(DIST)/$(BIN)-linux-amd64 .
 	GOOS=linux GOARCH=arm GOARM=7 $(GO) build $(BUILDFLAGS) -o $(DIST)/$(BIN)-linux-arm .
 	GOOS=linux GOARCH=arm64 $(GO) build $(BUILDFLAGS) -o $(DIST)/$(BIN)-linux-arm64 .
+	GOOS=linux GOARCH=amd64 $(GO) build $(BUILDFLAGS) -o $(DIST)/hotend-verify-sig-linux-amd64 ./verify-sig
+	GOOS=linux GOARCH=arm GOARM=7 $(GO) build $(BUILDFLAGS) -o $(DIST)/hotend-verify-sig-linux-arm ./verify-sig
+	GOOS=linux GOARCH=arm64 $(GO) build $(BUILDFLAGS) -o $(DIST)/hotend-verify-sig-linux-arm64 ./verify-sig
 
 test:
 	$(GO) vet ./...
