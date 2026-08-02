@@ -33,7 +33,7 @@ import (
 
 // Bump on every agent release. Agents auto-update to whatever /agent-bin/version
 // advertises (see selfUpdate). Date-based so "newer" is obvious.
-const agentVersion = "2026.08.01.5"
+const agentVersion = "2026.08.02.1"
 
 // Updates must be SIGNED. The relay serves <binary>.sig — hex ed25519 over the
 // exact binary bytes — and selfUpdate refuses anything that doesn't verify
@@ -1390,6 +1390,12 @@ func (c *conn) handleMoonrakerSpoolman(id string, r *reqBuf) {
 				SpoolID *int `json:"spool_id"`
 			}
 			json.Unmarshal(r.buf.Bytes(), &sp)
+			// Mirror the choice into Moonraker straight away when it owns the
+			// counting — otherwise the switch only lands on the next sync tick
+			// and the print you start right now is deducted from the old spool.
+			if moonrakerOwnsSpool.Load() {
+				go syncMoonrakerSpool()
+			}
 			respond(200, map[string]any{"result": map[string]any{"spool_id": sp.SpoolID}})
 		} else {
 			respond(200, map[string]any{"result": map[string]any{"spool_id": c.activeSpoolID()}})
@@ -1432,10 +1438,77 @@ func (c *conn) handleMoonrakerSpoolman(id string, r *reqBuf) {
 func startFilamentTracking() {
 	if moonrakerHasSpoolman() {
 		fmt.Println("[agent] Moonraker [spoolman] configured — filament usage comes from Moonraker; agent-side tracking off")
-		return
+		moonrakerOwnsSpool.Store(true)
+		// Standing down is only half the job: Moonraker deducts from the spool
+		// IT has selected, and nothing else ever sets that — choosing a spool in
+		// the app is intercepted by handleMoonrakerSpoolman and written to the
+		// central store, which Moonraker never sees. Its spool_id therefore sits
+		// at null and the printer records NOTHING while the app shows a healthy
+		// active spool. Keep the two in step.
+		for {
+			syncMoonrakerSpool()
+			time.Sleep(spoolSyncEvery)
+		}
 	}
 	fmt.Println("[agent] no Moonraker [spoolman] — agent tracks filament usage itself")
 	trackFilament()
+}
+
+// True once Moonraker is known to own the counting (i.e. it has [spoolman]).
+var moonrakerOwnsSpool atomic.Bool
+
+const spoolSyncEvery = 60 * time.Second
+
+// needsSpoolSync reports whether Moonraker's active spool should be rewritten to
+// match the account's. Split out from the HTTP plumbing so the decision is
+// testable: never push when nothing is selected in Hotend (leave the printer's
+// own choice alone), and never push a value it already has.
+func needsSpoolSync(moonraker, want *int) bool {
+	if want == nil {
+		return false
+	}
+	return moonraker == nil || *moonraker != *want
+}
+
+// syncMoonrakerSpool points Moonraker's active spool at the account's. Talks to
+// Moonraker directly (this call is a local client request, not one of the
+// app-originated ones handleMoonrakerSpoolman intercepts).
+func syncMoonrakerSpool() {
+	cc := curConn.Load()
+	if cc == nil {
+		return // not linked yet; the next tick retries
+	}
+	want := cc.activeSpoolID()
+	cl := &http.Client{Timeout: 5 * time.Second}
+	resp, err := cl.Get(localURL + "/server/spoolman/spool_id")
+	if err != nil {
+		return
+	}
+	body, _ := io.ReadAll(io.LimitReader(resp.Body, 1<<16))
+	resp.Body.Close()
+	var cur struct {
+		Result struct {
+			SpoolID *int `json:"spool_id"`
+		} `json:"result"`
+	}
+	json.Unmarshal(body, &cur)
+	if !needsSpoolSync(cur.Result.SpoolID, want) {
+		return
+	}
+	b, _ := json.Marshal(map[string]any{"spool_id": *want})
+	req, err := http.NewRequest("POST", localURL+"/server/spoolman/spool_id", bytes.NewReader(b))
+	if err != nil {
+		return
+	}
+	req.Header.Set("content-type", "application/json")
+	r2, err := cl.Do(req)
+	if err != nil {
+		return
+	}
+	r2.Body.Close()
+	if r2.StatusCode == http.StatusOK {
+		fmt.Printf("[agent] active spool → Moonraker: %d\n", *want)
+	}
 }
 
 // moonrakerHasSpoolman asks Moonraker for its config and reports whether a

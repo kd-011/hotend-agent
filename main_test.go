@@ -298,3 +298,31 @@ func TestBuildLocalURLPreservesEncoding(t *testing.T) {
 		}
 	}
 }
+
+// Regression: ISSUE-008 — found by /qa on 2026-08-02. The installer adds
+// [spoolman] to moonraker.conf, which makes the agent stand down from its own
+// print_stats counting so a print isn't deducted twice. But Moonraker only
+// deducts from the spool IT has selected, and nothing ever set that: choosing a
+// spool in the app is intercepted by handleMoonrakerSpoolman and written to the
+// central store, which Moonraker never sees. Its spool_id stayed null, so those
+// printers recorded NO filament usage at all while the app showed a healthy
+// active spool ("1 kg left" after a finished print).
+func TestNeedsSpoolSync(t *testing.T) {
+	id := func(n int) *int { return &n }
+	cases := []struct {
+		name            string
+		moonraker, want *int
+		expect          bool
+	}{
+		{"moonraker unset, hotend has one — the bug", nil, id(7), true},
+		{"different spools — app switched", id(3), id(7), true},
+		{"already in step — no write", id(7), id(7), false},
+		{"nothing selected in hotend — leave the printer alone", id(3), nil, false},
+		{"neither side has one", nil, nil, false},
+	}
+	for _, c := range cases {
+		if got := needsSpoolSync(c.moonraker, c.want); got != c.expect {
+			t.Errorf("%s: needsSpoolSync() = %v, want %v", c.name, got, c.expect)
+		}
+	}
+}
