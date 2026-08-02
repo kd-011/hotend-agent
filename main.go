@@ -15,6 +15,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"net"
 	"net/http"
 	"net/url"
 	"os"
@@ -33,7 +34,7 @@ import (
 
 // Bump on every agent release. Agents auto-update to whatever /agent-bin/version
 // advertises (see selfUpdate). Date-based so "newer" is obvious.
-const agentVersion = "2026.08.02.1"
+const agentVersion = "2026.08.02.2"
 
 // Updates must be SIGNED. The relay serves <binary>.sig — hex ed25519 over the
 // exact binary bytes — and selfUpdate refuses anything that doesn't verify
@@ -123,6 +124,9 @@ type msg struct {
 	WebcamURL    string            `json:"webcamUrl,omitempty"`  // per-printer webcam URL override
 	WebcamType   string            `json:"webcamType,omitempty"` // 'mjpeg' | 'hls' (auto-detected)
 	Body         json.RawMessage   `json:"body,omitempty"`       // spoolman request/response body
+	Host         string            `json:"host,omitempty"`       // tcp tunnel target host (LAN only)
+	Port         int               `json:"port,omitempty"`       // tcp tunnel target port
+	Error        string            `json:"error,omitempty"`      // tcp tunnel open failure
 }
 
 // The current live relay connection, so the long-lived local Spoolman HTTP
@@ -758,6 +762,7 @@ type conn struct {
 	localW    sync.Map // id -> *localWS
 	smPending sync.Map // spoolman request id -> chan *msg
 	cancels   sync.Map // id -> context.CancelFunc for in-flight HTTP fetches (esp. streams)
+	tcpConns  sync.Map // id -> net.Conn (raw LAN tunnels, plan 040 M4: Bambu MQTT/FTPS)
 }
 
 type reqBuf struct {
@@ -928,6 +933,64 @@ func (c *conn) dispatch(m *msg) {
 		if v, ok := c.localW.LoadAndDelete(m.ID); ok {
 			v.(*localWS).ws.Close()
 		}
+	case "tcpopen": // raw LAN tunnel (plan 040 M4): relay-side drivers reach Bambu MQTT/FTPS
+		go c.doTCPOpen(m.ID, m.Host, m.Port)
+	case "tcpdata":
+		if v, ok := c.tcpConns.Load(m.ID); ok {
+			dec, _ := base64.StdEncoding.DecodeString(m.B64)
+			v.(net.Conn).Write(dec)
+		}
+	case "tcpclose":
+		if v, ok := c.tcpConns.LoadAndDelete(m.ID); ok {
+			v.(net.Conn).Close()
+		}
+	}
+}
+
+// isPrivateHost restricts tunnel targets to the LAN: every resolved address
+// must be private/loopback/link-local. The tunnel exists so the relay's Bambu
+// driver can reach a printer on THIS network — it must never let a compromised
+// relay turn agents into open proxies to the internet.
+func isPrivateHost(host string) bool {
+	ips, err := net.LookupIP(host)
+	if err != nil || len(ips) == 0 {
+		return false
+	}
+	for _, ip := range ips {
+		if !(ip.IsPrivate() || ip.IsLoopback() || ip.IsLinkLocalUnicast()) {
+			return false
+		}
+	}
+	return true
+}
+
+func (c *conn) doTCPOpen(id, host string, port int) {
+	if port <= 0 || port > 65535 || !isPrivateHost(host) {
+		c.send(&msg{T: "tcperr", ID: id, Error: "target not allowed"})
+		return
+	}
+	tc, err := net.DialTimeout("tcp", net.JoinHostPort(host, fmt.Sprint(port)), 10*time.Second)
+	if err != nil {
+		c.send(&msg{T: "tcperr", ID: id, Error: err.Error()})
+		return
+	}
+	c.tcpConns.Store(id, tc)
+	c.send(&msg{T: "tcpready", ID: id})
+	buf := make([]byte, 32*1024)
+	for {
+		n, er := tc.Read(buf)
+		if n > 0 {
+			if c.send(&msg{T: "tcpdata", ID: id, B64: base64.StdEncoding.EncodeToString(buf[:n])}) != nil {
+				break // relay WS gone — stop pumping
+			}
+		}
+		if er != nil {
+			break
+		}
+	}
+	if _, loaded := c.tcpConns.LoadAndDelete(id); loaded {
+		tc.Close()
+		c.send(&msg{T: "tcpclose", ID: id})
 	}
 }
 
