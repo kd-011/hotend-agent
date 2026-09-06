@@ -326,3 +326,31 @@ func TestNeedsSpoolSync(t *testing.T) {
 		}
 	}
 }
+
+// resolvePrivateHost must hand the caller the IP it validated, not just a
+// yes/no — a caller that re-resolves the hostname to dial (as doTCPOpen used
+// to) reopens the DNS-rebinding hole this check exists to close: a relay
+// pointing at a rebinding domain could pass the check with a private answer
+// and get a public one on the second lookup.
+func TestResolvePrivateHostRejectsPublicTargets(t *testing.T) {
+	cases := []struct {
+		name string
+		host string
+		want bool
+	}{
+		{"loopback literal", "127.0.0.1", true},
+		{"private literal", "192.168.1.50", true},
+		{"link-local literal", "169.254.1.1", true},
+		{"public literal", "8.8.8.8", false},
+		{"unresolvable", "this-host-does-not-exist.invalid", false},
+	}
+	for _, c := range cases {
+		ip, ok := resolvePrivateHost(c.host)
+		if ok != c.want {
+			t.Errorf("%s: resolvePrivateHost(%q) ok = %v, want %v", c.name, c.host, ok, c.want)
+		}
+		if ok && ip == nil {
+			t.Errorf("%s: resolvePrivateHost(%q) returned ok=true with nil IP", c.name, c.host)
+		}
+	}
+}

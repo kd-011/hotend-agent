@@ -34,7 +34,7 @@ import (
 
 // Bump on every agent release. Agents auto-update to whatever /agent-bin/version
 // advertises (see selfUpdate). Date-based so "newer" is obvious.
-const agentVersion = "2026.08.02.2"
+const agentVersion = "2026.09.06.1"
 
 // Updates must be SIGNED. The relay serves <binary>.sig — hex ed25519 over the
 // exact binary bytes — and selfUpdate refuses anything that doesn't verify
@@ -947,29 +947,39 @@ func (c *conn) dispatch(m *msg) {
 	}
 }
 
-// isPrivateHost restricts tunnel targets to the LAN: every resolved address
-// must be private/loopback/link-local. The tunnel exists so the relay's Bambu
-// driver can reach a printer on THIS network — it must never let a compromised
-// relay turn agents into open proxies to the internet.
-func isPrivateHost(host string) bool {
+// resolvePrivateHost restricts tunnel targets to the LAN: every resolved
+// address must be private/loopback/link-local. The tunnel exists so the
+// relay's Bambu driver can reach a printer on THIS network — it must never
+// let a compromised relay turn agents into open proxies to the internet.
+//
+// It returns one resolved IP for the caller to dial directly. Dialing the
+// hostname again after this check would re-resolve DNS — a rebinding relay
+// could pass this check with a private answer and hand the dialer a public
+// one on the second lookup, bypassing the restriction entirely.
+func resolvePrivateHost(host string) (net.IP, bool) {
 	ips, err := net.LookupIP(host)
 	if err != nil || len(ips) == 0 {
-		return false
+		return nil, false
 	}
 	for _, ip := range ips {
 		if !(ip.IsPrivate() || ip.IsLoopback() || ip.IsLinkLocalUnicast()) {
-			return false
+			return nil, false
 		}
 	}
-	return true
+	return ips[0], true
 }
 
 func (c *conn) doTCPOpen(id, host string, port int) {
-	if port <= 0 || port > 65535 || !isPrivateHost(host) {
+	if port <= 0 || port > 65535 {
 		c.send(&msg{T: "tcperr", ID: id, Error: "target not allowed"})
 		return
 	}
-	tc, err := net.DialTimeout("tcp", net.JoinHostPort(host, fmt.Sprint(port)), 10*time.Second)
+	ip, ok := resolvePrivateHost(host)
+	if !ok {
+		c.send(&msg{T: "tcperr", ID: id, Error: "target not allowed"})
+		return
+	}
+	tc, err := net.DialTimeout("tcp", net.JoinHostPort(ip.String(), fmt.Sprint(port)), 10*time.Second)
 	if err != nil {
 		c.send(&msg{T: "tcperr", ID: id, Error: err.Error()})
 		return
