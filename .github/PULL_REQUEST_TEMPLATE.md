@@ -1,6 +1,6 @@
 ## What changed and why
 
-Agent source here is a published copy of a private monorepo, so a code change is ported there by the maintainer rather than merged as-is (see CONTRIBUTING.md). Docs, templates and `.github/` changes merge normally.
+Agent source here is a published copy of a private monorepo, so the maintainer ports code changes there instead of merging them here (see CONTRIBUTING.md). Docs, templates and `.github/` changes merge normally.
 
 ## How you checked it
 
