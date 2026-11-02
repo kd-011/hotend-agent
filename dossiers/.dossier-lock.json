@@ -1,0 +1,363 @@
+{
+  "version": 1,
+  "docs": {
+    "hotend-agent": {
+      "claims": {
+        "9ba68e4aa789": {
+          "text": "Refuses to start unless the relay URL is `wss://`, with `ws://` allowed only for `127.0.0.1` and `localhost`.",
+          "line": 14,
+          "specs": [
+            "main.go:285-288"
+          ],
+          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "a40cac06141e3b149db6f944efb07b062926031f",
+              "commit": "1b384b32c178991a11da2ef1e9d00d58411d3db0",
+              "range": {
+                "start": 285,
+                "end": 288,
+                "hash": "5632fa996bfede1797c510a723ee6ed2a8fe45e6"
+              }
+            }
+          }
+        },
+        "75e076672b0d": {
+          "text": "Talks to Moonraker at `http://127.0.0.1:7125` and the webcam at `http://127.0.0.1:8080` unless the environment says otherwise.",
+          "line": 15,
+          "specs": [
+            "main.go:73-74"
+          ],
+          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "a40cac06141e3b149db6f944efb07b062926031f",
+              "commit": "1b384b32c178991a11da2ef1e9d00d58411d3db0",
+              "range": {
+                "start": 73,
+                "end": 74,
+                "hash": "0b427aacc45d898607564b28ed969b25e6fb04ec"
+              }
+            }
+          }
+        },
+        "fe2c24b24fab": {
+          "text": "Stores the printer ID and device secret in `agent.json` under a `hotend` config directory, written with mode `0600`.",
+          "line": 16,
+          "specs": [
+            "main.go:82-89",
+            "main.go:236-242"
+          ],
+          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "a40cac06141e3b149db6f944efb07b062926031f",
+              "commit": "1b384b32c178991a11da2ef1e9d00d58411d3db0",
+              "range": {
+                "start": 82,
+                "end": 89,
+                "hash": "8123cf21082653d43151855a548d0449ad409c52"
+              }
+            },
+            "main.go:236-242": {
+              "path": "main.go",
+              "blob": "a40cac06141e3b149db6f944efb07b062926031f",
+              "commit": "1b384b32c178991a11da2ef1e9d00d58411d3db0",
+              "range": {
+                "start": 236,
+                "end": 242,
+                "hash": "a855b5abb435879fdebccf04e765f70ae1b39894"
+              }
+            }
+          }
+        },
+        "b61409a3cd9b": {
+          "text": "The Spoolman-compatible endpoint listens on `127.0.0.1` only, on port 7913 by default.",
+          "line": 17,
+          "specs": [
+            "main.go:136",
+            "main.go:1097"
+          ],
+          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "a40cac06141e3b149db6f944efb07b062926031f",
+              "commit": "1b384b32c178991a11da2ef1e9d00d58411d3db0",
+              "range": {
+                "start": 136,
+                "end": 136,
+                "hash": "6c774704a32177cdbaba4027b4d54f3039226239"
+              }
+            },
+            "main.go:1097-1097": {
+              "path": "main.go",
+              "blob": "a40cac06141e3b149db6f944efb07b062926031f",
+              "commit": "1b384b32c178991a11da2ef1e9d00d58411d3db0",
+              "range": {
+                "start": 1097,
+                "end": 1097,
+                "hash": "4f5b585e1fd83454cbb8381a46fcf25b94ca02b3"
+              }
+            }
+          }
+        },
+        "0ffdc5466a6a": {
+          "text": "Self-update can be switched off locally with `HOTEND_AGENT_AUTO_UPDATE` set to `off`, `0`, `false` or `no`.",
+          "line": 18,
+          "specs": [
+            "main.go:595-598"
+          ],
+          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "a40cac06141e3b149db6f944efb07b062926031f",
+              "commit": "1b384b32c178991a11da2ef1e9d00d58411d3db0",
+              "range": {
+                "start": 595,
+                "end": 598,
+                "hash": "69ed4ffee227a6222c9cf89687f9bba7269b59e6"
+              }
+            }
+          }
+        },
+        "8acb30fee408": {
+          "text": "Checks for a newer build every 6 hours plus up to an hour of random jitter.",
+          "line": 19,
+          "specs": [
+            "main.go:353"
+          ],
+          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "a40cac06141e3b149db6f944efb07b062926031f",
+              "commit": "1b384b32c178991a11da2ef1e9d00d58411d3db0",
+              "range": {
+                "start": 353,
+                "end": 353,
+                "hash": "47063ce9529cb912a8a1d8c4c2a5ed4df9d5cb17"
+              }
+            }
+          }
+        },
+        "afafe1d86313": {
+          "text": "Accepts a release only if its signature verifies under one of the public keys compiled into the source.",
+          "line": 20,
+          "specs": [
+            "main.go:50",
+            "main.go:745-755"
+          ],
+          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "a40cac06141e3b149db6f944efb07b062926031f",
+              "commit": "1b384b32c178991a11da2ef1e9d00d58411d3db0",
+              "range": {
+                "start": 50,
+                "end": 50,
+                "hash": "97828b4e3916825b65076292ea9e33ea83df32b6"
+              }
+            },
+            "main.go:745-755": {
+              "path": "main.go",
+              "blob": "a40cac06141e3b149db6f944efb07b062926031f",
+              "commit": "1b384b32c178991a11da2ef1e9d00d58411d3db0",
+              "range": {
+                "start": 745,
+                "end": 755,
+                "hash": "982d868bef5c886de092ca7cb7428db2a2a80505"
+              }
+            }
+          }
+        },
+        "04e17aa4084e": {
+          "text": "Ignores any release version that is not strictly newer than the running one.",
+          "line": 21,
+          "specs": [
+            "main.go:496-498"
+          ],
+          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "a40cac06141e3b149db6f944efb07b062926031f",
+              "commit": "1b384b32c178991a11da2ef1e9d00d58411d3db0",
+              "range": {
+                "start": 496,
+                "end": 498,
+                "hash": "53eb9beafcc639d5719a673ff488d06283d0f756"
+              }
+            }
+          }
+        },
+        "94e6e86eb9d4": {
+          "text": "Rolls a new binary back if it has not reached the relay within 15 minutes or 3 boots.",
+          "line": 22,
+          "specs": [
+            "main.go:326-331"
+          ],
+          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "a40cac06141e3b149db6f944efb07b062926031f",
+              "commit": "1b384b32c178991a11da2ef1e9d00d58411d3db0",
+              "range": {
+                "start": 326,
+                "end": 331,
+                "hash": "77c42448c51b130160509c544f10e082ec756c45"
+              }
+            }
+          }
+        },
+        "ad2149de6e0f": {
+          "text": "The first-install checker `verify-sig` takes a file, a hex signature file and one or more hex public keys, and exits 1 unless one key verifies.",
+          "line": 23,
+          "specs": [
+            "verify-sig/main.go:27-31",
+            "verify-sig/main.go:50-57"
+          ],
+          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "files": {
+            "verify-sig/main.go": {
+              "path": "verify-sig/main.go",
+              "blob": "37dcca93e9c64f3816a8bedfaee437f743fce3d9",
+              "commit": "77daeb37173961be53b216250df23d80d178cf4e",
+              "range": {
+                "start": 27,
+                "end": 31,
+                "hash": "7ab7d1e460729ce951c4a0ee590f80da58370058"
+              }
+            },
+            "verify-sig/main.go:50-57": {
+              "path": "verify-sig/main.go",
+              "blob": "37dcca93e9c64f3816a8bedfaee437f743fce3d9",
+              "commit": "77daeb37173961be53b216250df23d80d178cf4e",
+              "range": {
+                "start": 50,
+                "end": 57,
+                "hash": "88d10b857b46b3ee003a7b2ee2cea0814298dde0"
+              }
+            }
+          }
+        },
+        "65a046d6f583": {
+          "text": "One Go module with a single dependency, `gorilla/websocket`, on Go 1.22.",
+          "line": 27,
+          "specs": [
+            "go.mod"
+          ],
+          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "files": {
+            "go.mod": {
+              "path": "go.mod",
+              "blob": "a2607737b668abf5b977e7138a191f3a9a4c9530",
+              "commit": "37116da3c8e50d7d2bc6d9c41211703ba4210762"
+            }
+          }
+        },
+        "03d47e8a14bc": {
+          "text": "Builds are static (`CGO_ENABLED=0`) and use `-trimpath -buildvcs=false`, which keeps them reproducible.",
+          "line": 28,
+          "specs": [
+            "Makefile:12-13"
+          ],
+          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "files": {
+            "Makefile": {
+              "path": "Makefile",
+              "blob": "b0f6847ec650eb667192239fcb7fb2c2fce36383",
+              "commit": "c136c72ef28bb3f8dfac04d952c8aab343c0d10f",
+              "range": {
+                "start": 12,
+                "end": 13,
+                "hash": "cef15b0bd7004bbbc85bae88dfeec46321c0df2a"
+              }
+            }
+          }
+        },
+        "32496935bedd": {
+          "text": "CI vets, builds the amd64, arm64 and arm binaries, rejects any that is dynamically linked, and runs the tests on every pull request and weekly.",
+          "line": 32,
+          "specs": [
+            ".github/workflows/ci.yml:6-10",
+            ".github/workflows/ci.yml:30-31",
+            ".github/workflows/ci.yml:35-47"
+          ],
+          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "files": {
+            ".github/workflows/ci.yml": {
+              "path": ".github/workflows/ci.yml",
+              "blob": "4e6892221cd8697dd9f49225e2a5a79e44a0d588",
+              "commit": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+              "range": {
+                "start": 6,
+                "end": 10,
+                "hash": "45716df68b57d60eab471b072065ed48112dfd27"
+              }
+            },
+            ".github/workflows/ci.yml:30-31": {
+              "path": ".github/workflows/ci.yml",
+              "blob": "4e6892221cd8697dd9f49225e2a5a79e44a0d588",
+              "commit": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+              "range": {
+                "start": 30,
+                "end": 31,
+                "hash": "dc48a1d46ea06dc5af093021b35e28adf27a20eb"
+              }
+            },
+            ".github/workflows/ci.yml:35-47": {
+              "path": ".github/workflows/ci.yml",
+              "blob": "4e6892221cd8697dd9f49225e2a5a79e44a0d588",
+              "commit": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+              "range": {
+                "start": 35,
+                "end": 47,
+                "hash": "c4e6cfa57811b5df249d17eba6aed737a554295d"
+              }
+            }
+          }
+        },
+        "ae1b31a5ef7d": {
+          "text": "Every published release is rebuilt on a GitHub runner with Go 1.22.2 and the job fails if the bytes differ from the published binaries.",
+          "line": 33,
+          "specs": [
+            ".github/workflows/reproducible.yml:54",
+            ".github/workflows/reproducible.yml:72-82"
+          ],
+          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "files": {
+            ".github/workflows/reproducible.yml": {
+              "path": ".github/workflows/reproducible.yml",
+              "blob": "0e75c8ce6b17989a60520f112bfe0a842701a8de",
+              "commit": "9421808ab3332b98753f53724d4594c0c4766bc4",
+              "range": {
+                "start": 54,
+                "end": 54,
+                "hash": "ff8d151dbfe9b23f184504d679420bfab6a5e62d"
+              }
+            },
+            ".github/workflows/reproducible.yml:72-82": {
+              "path": ".github/workflows/reproducible.yml",
+              "blob": "0e75c8ce6b17989a60520f112bfe0a842701a8de",
+              "commit": "9421808ab3332b98753f53724d4594c0c4766bc4",
+              "range": {
+                "start": 72,
+                "end": 82,
+                "hash": "3577ebb4e3560f59928f95c9615cfa5c097e0308"
+              }
+            }
+          }
+        }
+      },
+      "pinnedAt": "2026-11-02T13:33:49.696Z",
+      "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee"
+    }
+  }
+}

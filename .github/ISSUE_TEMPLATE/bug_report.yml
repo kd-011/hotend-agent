@@ -1,0 +1,31 @@
+name: Bug report
+description: The agent behaves differently from the README
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you ran and what you saw. Remove printer IDs, pairing codes and tokens from any log you paste.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Agent version
+      description: Output of `hotend-agent --version`.
+    validations:
+      required: true
+  - type: input
+    id: platform
+    attributes:
+      label: Host
+      description: Architecture and OS image, for example "Raspberry Pi 4, 64-bit Raspberry Pi OS".
+    validations:
+      required: false

@@ -1,5 +1,7 @@
 # hotend-agent
 
+[![ci](https://github.com/kd-011/hotend-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/kd-011/hotend-agent/actions/workflows/ci.yml)
+
 The printer-side agent for [Hotend](https://hotend.app). It runs on the same box
 as your printer (a Raspberry Pi, an old mini-PC, anything on the same network),
 dials out to the Hotend relay over a single WebSocket, and forwards the traffic
@@ -15,7 +17,11 @@ The agent makes **one outbound connection** — a `wss://` WebSocket to the rela
 It never opens a listening port to the internet. When you open the app, the relay
 asks the agent to make a specific local request (a Moonraker REST call, a webcam
 frame, a Moonraker WebSocket subscription), the agent makes it against
-`127.0.0.1`, and streams the response back over the same connection.
+`127.0.0.1` by default, and streams the response back over the same connection.
+Two things go beyond that: the relay can set the webcam URL the agent fetches, and
+it can ask for a raw TCP tunnel to a host on your LAN (the agent refuses any host
+that is not on a private, loopback or link-local address). See
+[SECURITY.md](SECURITY.md) for what that means for a compromised relay.
 
 Because everything is outbound, there is nothing to port-forward and nothing on
 your LAN is reachable from outside. If the relay is down, or you stop the agent,
@@ -205,6 +211,10 @@ workflow does this check on a GitHub-hosted runner for every release, so you can
 also just look for the green run. Static also matters on its own: a dynamically linked build picks
 up the glibc of whatever machine compiled it and won't start on an older printer
 image.
+
+## Contributing and security
+
+The agent source here is a published copy of a private monorepo. [CONTRIBUTING.md](CONTRIBUTING.md) explains how a pull request is handled, and [SECURITY.md](SECURITY.md) says how to report a vulnerability privately and how to check a release yourself.
 
 ## License
 

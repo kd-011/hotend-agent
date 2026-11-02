@@ -1,0 +1,20 @@
+version: 2
+updates:
+  # GitHub Actions only. go.mod and go.sum are copied in from the source tree
+  # this repo is published from, so a Go bump opened here would be overwritten
+  # on the next publish. Dependency alerts for Go modules still show up in the
+  # Security tab.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    # Wait a week before proposing a release. Security updates ignore this.
+    cooldown:
+      default-days: 7
+    groups:
+      actions-minor-patch:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch

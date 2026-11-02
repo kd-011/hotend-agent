@@ -1,0 +1,5 @@
+{
+  "dossiers": "dossiers",
+  "reposRoot": ".",
+  "collectors": ["go"]
+}

@@ -1,0 +1,85 @@
+# Weekly upkeep: dead links in the docs, and claims in the dossier that no longer
+# match the files they cite. Each problem opens or updates one labelled issue and
+# the issue is closed again when the next run is clean. A clean run changes nothing.
+# This job only reads the repository and files issues: it never edits code, tags
+# or releases.
+name: upkeep
+
+on:
+  schedule:
+    - cron: "23 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check links
+        id: lychee
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          args: >-
+            --max-retries 3 --retry-wait-time 10 --timeout 30 --no-progress
+            --accept '200..=299,429'
+            './README.md' './CONTRIBUTING.md' './SECURITY.md' './CODE_OF_CONDUCT.md'
+          output: lychee/out.md
+          fail: false
+          jobSummary: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Open, update or close the issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LYCHEE_EXIT: ${{ steps.lychee.outputs.exit_code }}
+        run: |
+          if [ "${LYCHEE_EXIT:-0}" != "0" ]; then
+            { echo "The weekly link check found links that did not resolve after three retries."; echo; cat lychee/out.md 2>/dev/null || echo "(the checker wrote no report, see the run log)"; } > link-body.md
+            .github/scripts/sync-issue.sh link-rot "Broken links in the docs" link-body.md
+          else
+            .github/scripts/sync-issue.sh link-rot "Broken links in the docs"
+          fi
+
+  drift:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Pinned to a release tag, never a branch. Bump it in a reviewed change.
+      - run: npm install -g github:kd-011/dossier-scribe#v0.1.0
+
+      - name: Open, update or close the issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          problems=0
+          dossier-scribe lint > lint.txt 2>&1 || problems=1
+          dossier-scribe auto --check > auto.txt 2>&1 || problems=1
+          dossier-scribe check --fail-on stale,broken > check.txt 2>&1 || problems=1
+          if [ "$problems" = 1 ]; then
+            {
+              echo "The weekly dossier check found claims that no longer match the files they cite."
+              echo "Re-read the cited files, fix only the claims that are now wrong, then run \`dossier-scribe pin\` and commit the dossier and lock."
+              for f in lint auto check; do
+                echo; echo "### $f"; echo; echo "~~~~"; cat "$f.txt"; echo "~~~~"
+              done
+            } > drift-body.md
+            .github/scripts/sync-issue.sh dossier-drift "Dossier drift" drift-body.md
+          else
+            .github/scripts/sync-issue.sh dossier-drift "Dossier drift"
+          fi
