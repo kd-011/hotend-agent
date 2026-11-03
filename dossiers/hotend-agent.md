@@ -3,7 +3,7 @@ slug: hotend-agent
 name: hotend-agent
 repo: .
 status: active
-last_verified: 2026-11-02
+last_verified: 2026-11-03
 tags: [go, agent, 3d-printing]
 ---
 

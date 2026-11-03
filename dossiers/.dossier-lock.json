@@ -9,12 +9,12 @@
           "specs": [
             "main.go:285-288"
           ],
-          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "head": "404f30989530f5ca93f2d0f1527668fca30f34d0",
           "files": {
             "main.go": {
               "path": "main.go",
-              "blob": "a40cac06141e3b149db6f944efb07b062926031f",
-              "commit": "1b384b32c178991a11da2ef1e9d00d58411d3db0",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
               "range": {
                 "start": 285,
                 "end": 288,
@@ -29,12 +29,12 @@
           "specs": [
             "main.go:73-74"
           ],
-          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "head": "404f30989530f5ca93f2d0f1527668fca30f34d0",
           "files": {
             "main.go": {
               "path": "main.go",
-              "blob": "a40cac06141e3b149db6f944efb07b062926031f",
-              "commit": "1b384b32c178991a11da2ef1e9d00d58411d3db0",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
               "range": {
                 "start": 73,
                 "end": 74,
@@ -50,12 +50,12 @@
             "main.go:82-89",
             "main.go:236-242"
           ],
-          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "head": "404f30989530f5ca93f2d0f1527668fca30f34d0",
           "files": {
             "main.go": {
               "path": "main.go",
-              "blob": "a40cac06141e3b149db6f944efb07b062926031f",
-              "commit": "1b384b32c178991a11da2ef1e9d00d58411d3db0",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
               "range": {
                 "start": 82,
                 "end": 89,
@@ -64,8 +64,8 @@
             },
             "main.go:236-242": {
               "path": "main.go",
-              "blob": "a40cac06141e3b149db6f944efb07b062926031f",
-              "commit": "1b384b32c178991a11da2ef1e9d00d58411d3db0",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
               "range": {
                 "start": 236,
                 "end": 242,
@@ -81,12 +81,12 @@
             "main.go:136",
             "main.go:1097"
           ],
-          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "head": "404f30989530f5ca93f2d0f1527668fca30f34d0",
           "files": {
             "main.go": {
               "path": "main.go",
-              "blob": "a40cac06141e3b149db6f944efb07b062926031f",
-              "commit": "1b384b32c178991a11da2ef1e9d00d58411d3db0",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
               "range": {
                 "start": 136,
                 "end": 136,
@@ -95,8 +95,8 @@
             },
             "main.go:1097-1097": {
               "path": "main.go",
-              "blob": "a40cac06141e3b149db6f944efb07b062926031f",
-              "commit": "1b384b32c178991a11da2ef1e9d00d58411d3db0",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
               "range": {
                 "start": 1097,
                 "end": 1097,
@@ -111,12 +111,12 @@
           "specs": [
             "main.go:595-598"
           ],
-          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "head": "404f30989530f5ca93f2d0f1527668fca30f34d0",
           "files": {
             "main.go": {
               "path": "main.go",
-              "blob": "a40cac06141e3b149db6f944efb07b062926031f",
-              "commit": "1b384b32c178991a11da2ef1e9d00d58411d3db0",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
               "range": {
                 "start": 595,
                 "end": 598,
@@ -131,12 +131,12 @@
           "specs": [
             "main.go:353"
           ],
-          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "head": "404f30989530f5ca93f2d0f1527668fca30f34d0",
           "files": {
             "main.go": {
               "path": "main.go",
-              "blob": "a40cac06141e3b149db6f944efb07b062926031f",
-              "commit": "1b384b32c178991a11da2ef1e9d00d58411d3db0",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
               "range": {
                 "start": 353,
                 "end": 353,
@@ -152,12 +152,12 @@
             "main.go:50",
             "main.go:745-755"
           ],
-          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "head": "404f30989530f5ca93f2d0f1527668fca30f34d0",
           "files": {
             "main.go": {
               "path": "main.go",
-              "blob": "a40cac06141e3b149db6f944efb07b062926031f",
-              "commit": "1b384b32c178991a11da2ef1e9d00d58411d3db0",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
               "range": {
                 "start": 50,
                 "end": 50,
@@ -166,8 +166,8 @@
             },
             "main.go:745-755": {
               "path": "main.go",
-              "blob": "a40cac06141e3b149db6f944efb07b062926031f",
-              "commit": "1b384b32c178991a11da2ef1e9d00d58411d3db0",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
               "range": {
                 "start": 745,
                 "end": 755,
@@ -182,12 +182,12 @@
           "specs": [
             "main.go:496-498"
           ],
-          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "head": "404f30989530f5ca93f2d0f1527668fca30f34d0",
           "files": {
             "main.go": {
               "path": "main.go",
-              "blob": "a40cac06141e3b149db6f944efb07b062926031f",
-              "commit": "1b384b32c178991a11da2ef1e9d00d58411d3db0",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
               "range": {
                 "start": 496,
                 "end": 498,
@@ -202,12 +202,12 @@
           "specs": [
             "main.go:326-331"
           ],
-          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "head": "404f30989530f5ca93f2d0f1527668fca30f34d0",
           "files": {
             "main.go": {
               "path": "main.go",
-              "blob": "a40cac06141e3b149db6f944efb07b062926031f",
-              "commit": "1b384b32c178991a11da2ef1e9d00d58411d3db0",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
               "range": {
                 "start": 326,
                 "end": 331,
@@ -223,12 +223,12 @@
             "verify-sig/main.go:27-31",
             "verify-sig/main.go:50-57"
           ],
-          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "head": "404f30989530f5ca93f2d0f1527668fca30f34d0",
           "files": {
             "verify-sig/main.go": {
               "path": "verify-sig/main.go",
-              "blob": "37dcca93e9c64f3816a8bedfaee437f743fce3d9",
-              "commit": "77daeb37173961be53b216250df23d80d178cf4e",
+              "blob": "96d8aa80d6b8b1ea2a0e438b18c96143a2b585a9",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
               "range": {
                 "start": 27,
                 "end": 31,
@@ -237,8 +237,8 @@
             },
             "verify-sig/main.go:50-57": {
               "path": "verify-sig/main.go",
-              "blob": "37dcca93e9c64f3816a8bedfaee437f743fce3d9",
-              "commit": "77daeb37173961be53b216250df23d80d178cf4e",
+              "blob": "96d8aa80d6b8b1ea2a0e438b18c96143a2b585a9",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
               "range": {
                 "start": 50,
                 "end": 57,
@@ -253,12 +253,12 @@
           "specs": [
             "go.mod"
           ],
-          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "head": "404f30989530f5ca93f2d0f1527668fca30f34d0",
           "files": {
             "go.mod": {
               "path": "go.mod",
               "blob": "a2607737b668abf5b977e7138a191f3a9a4c9530",
-              "commit": "37116da3c8e50d7d2bc6d9c41211703ba4210762"
+              "commit": "44a3b5f3454e1107a1147be66f07ff1859211cba"
             }
           }
         },
@@ -268,12 +268,12 @@
           "specs": [
             "Makefile:12-13"
           ],
-          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "head": "404f30989530f5ca93f2d0f1527668fca30f34d0",
           "files": {
             "Makefile": {
               "path": "Makefile",
-              "blob": "b0f6847ec650eb667192239fcb7fb2c2fce36383",
-              "commit": "c136c72ef28bb3f8dfac04d952c8aab343c0d10f",
+              "blob": "23443391a99126982af8006d67f8185673c21477",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
               "range": {
                 "start": 12,
                 "end": 13,
@@ -290,12 +290,12 @@
             ".github/workflows/ci.yml:30-31",
             ".github/workflows/ci.yml:35-47"
           ],
-          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "head": "404f30989530f5ca93f2d0f1527668fca30f34d0",
           "files": {
             ".github/workflows/ci.yml": {
               "path": ".github/workflows/ci.yml",
-              "blob": "4e6892221cd8697dd9f49225e2a5a79e44a0d588",
-              "commit": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+              "blob": "3ab706bb5cde79e88652823336ebbe0a05ea433f",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
               "range": {
                 "start": 6,
                 "end": 10,
@@ -304,8 +304,8 @@
             },
             ".github/workflows/ci.yml:30-31": {
               "path": ".github/workflows/ci.yml",
-              "blob": "4e6892221cd8697dd9f49225e2a5a79e44a0d588",
-              "commit": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+              "blob": "3ab706bb5cde79e88652823336ebbe0a05ea433f",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
               "range": {
                 "start": 30,
                 "end": 31,
@@ -314,12 +314,12 @@
             },
             ".github/workflows/ci.yml:35-47": {
               "path": ".github/workflows/ci.yml",
-              "blob": "4e6892221cd8697dd9f49225e2a5a79e44a0d588",
-              "commit": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+              "blob": "3ab706bb5cde79e88652823336ebbe0a05ea433f",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
               "range": {
                 "start": 35,
                 "end": 47,
-                "hash": "c4e6cfa57811b5df249d17eba6aed737a554295d"
+                "hash": "32ae01ecf038f4ea9e2cff66dfdb7f91a07b6312"
               }
             }
           }
@@ -331,12 +331,12 @@
             ".github/workflows/reproducible.yml:54",
             ".github/workflows/reproducible.yml:72-82"
           ],
-          "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee",
+          "head": "404f30989530f5ca93f2d0f1527668fca30f34d0",
           "files": {
             ".github/workflows/reproducible.yml": {
               "path": ".github/workflows/reproducible.yml",
-              "blob": "0e75c8ce6b17989a60520f112bfe0a842701a8de",
-              "commit": "9421808ab3332b98753f53724d4594c0c4766bc4",
+              "blob": "80c3db72ba4cd0453279d3eb61b1a41d078a5398",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
               "range": {
                 "start": 54,
                 "end": 54,
@@ -345,8 +345,8 @@
             },
             ".github/workflows/reproducible.yml:72-82": {
               "path": ".github/workflows/reproducible.yml",
-              "blob": "0e75c8ce6b17989a60520f112bfe0a842701a8de",
-              "commit": "9421808ab3332b98753f53724d4594c0c4766bc4",
+              "blob": "80c3db72ba4cd0453279d3eb61b1a41d078a5398",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
               "range": {
                 "start": 72,
                 "end": 82,
@@ -356,8 +356,8 @@
           }
         }
       },
-      "pinnedAt": "2026-11-02T13:33:49.696Z",
-      "head": "0ccae0df5534ef1e2b4b4c27f0cc462123a9f5ee"
+      "pinnedAt": "2026-11-03T07:48:00.028Z",
+      "head": "404f30989530f5ca93f2d0f1527668fca30f34d0"
     }
   }
 }
