@@ -2,11 +2,11 @@ BIN := hotend-agent
 DIST := dist
 LDFLAGS := -s -w
 # CGO_ENABLED=0 and -trimpath are not optional for a shipped binary:
-#   static  — a dynamically linked build picks up the build machine's glibc and
+#   static: a dynamically linked build picks up the build machine's glibc and
 #             refuses to start on an older printer image
-#   trimpath— no local filesystem paths baked in, which is what makes the build
+#   trimpath: no local filesystem paths baked in, which is what makes the build
 #             reproducible so anyone can compare their bytes to a published release
-#   -buildvcs=false — no git-revision stamp, so a rebuild of this tree produces
+#   -buildvcs=false: no git-revision stamp, so a rebuild of this tree produces
 #             byte-identical binaries to the published release regardless of
 #             which clone (or mirror) it's built from
 GO := CGO_ENABLED=0 go

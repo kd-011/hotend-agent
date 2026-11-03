@@ -97,8 +97,8 @@ func TestSHA256Hex(t *testing.T) {
 	}
 }
 
-// The signatures scripts/sign-agent-release.mjs writes must verify against a key
-// baked into the agent — this is the interop check between Node's signer and Go's
+// Release signatures must verify against a key
+// baked into the agent. This is the interop check between Node's signer and Go's
 // verifier, run over the real release artifacts when they exist.
 func TestReleaseSignaturesVerify(t *testing.T) {
 	checked := 0
@@ -106,12 +106,12 @@ func TestReleaseSignaturesVerify(t *testing.T) {
 		bin := "hotend-agent-linux-" + arch
 		data, err := os.ReadFile(bin)
 		if err != nil {
-			continue // not built in this checkout — nothing to verify
+			continue // not built in this checkout, nothing to verify
 		}
 		sb, err := os.ReadFile(bin + ".sig")
 		if err != nil {
 			// An unsigned build is normal in CI (no release key there). The signed
-			// -release gate is scripts/publish-agent.sh, which refuses to publish a
+			// -release gate is the publish script, which refuses to publish a
 			// binary without a fresh .sig.
 			continue
 		}
@@ -175,7 +175,7 @@ func TestPendingBootVerdict(t *testing.T) {
 }
 
 // A marker naming some OTHER version means we are not the binary it describes
-// (a revert already happened, or the swap never took) — it must be discarded,
+// (a revert already happened, or the swap never took), so it must be discarded,
 // not counted against the running binary.
 func TestPendingMarkerForAnotherVersionIsDropped(t *testing.T) {
 	tempState(t)
@@ -204,7 +204,7 @@ func TestConnectClearsProbation(t *testing.T) {
 }
 
 // Rolling back restores the previous binary and remembers the version it escaped
-// — otherwise the agent downloads the same broken release again in 6 hours.
+// or the agent downloads the same broken release again in 6 hours.
 func TestRevertRestoresPreviousBinaryAndBlacklists(t *testing.T) {
 	tempState(t)
 	dir := t.TempDir()
@@ -263,10 +263,10 @@ func TestJitterStaysInRange(t *testing.T) {
 	}
 }
 
-// Regression: ISSUE-004 — found by /qa on 2026-08-01. The proxied path arrives
+// Regression. The proxied path arrives
 // percent-encoded; assigning it to url.URL.Path (the DECODED field) made
 // String() escape the '%' again, so "%20" went out as "%2520" and Moonraker
-// 404'd every file whose name contains a space or '+' — roughly half a real
+// 404'd every file whose name contains a space or '+', roughly half a real
 // g-code library, plus the matching timelapses and thumbnails.
 func TestBuildLocalURLPreservesEncoding(t *testing.T) {
 	const base = "http://127.0.0.1:7125"
@@ -299,7 +299,7 @@ func TestBuildLocalURLPreservesEncoding(t *testing.T) {
 	}
 }
 
-// Regression: ISSUE-008 — found by /qa on 2026-08-02. The installer adds
+// Regression. The installer adds
 // [spoolman] to moonraker.conf, which makes the agent stand down from its own
 // print_stats counting so a print isn't deducted twice. But Moonraker only
 // deducts from the spool IT has selected, and nothing ever set that: choosing a
@@ -328,7 +328,7 @@ func TestNeedsSpoolSync(t *testing.T) {
 }
 
 // resolvePrivateHost must hand the caller the IP it validated, not just a
-// yes/no — a caller that re-resolves the hostname to dial (as doTCPOpen used
+// yes/no. A caller that re-resolves the hostname to dial (as doTCPOpen used
 // to) reopens the DNS-rebinding hole this check exists to close: a relay
 // pointing at a rebinding domain could pass the check with a private answer
 // and get a public one on the second lookup.

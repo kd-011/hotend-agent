@@ -10,8 +10,8 @@ import (
 )
 
 // Builds the verify-sig binary once and runs it as a real subprocess against
-// generated keys — this tool's whole job is being trustworthy when invoked
-// exactly the way install-agent.sh invokes it, so testing the CLI surface
+// generated keys. This tool's whole job is being trustworthy when invoked
+// exactly the way the installer invokes it, so testing the CLI surface
 // (args, exit codes) matters more than testing the library call directly.
 func buildVerifySig(t *testing.T) string {
 	t.Helper()

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// verify-agent-release.mjs — check that the SERVED agent release is installable.
+// verify-agent-release.mjs: check that the SERVED agent release is installable.
 //
 // The publish smoke test used to prove only that a version string and a non-empty
 // .sig came back. That cannot catch the failure that matters: a binary whose bytes
@@ -7,8 +7,8 @@
 // publish, a stale CDN copy). Every agent would reject that binary in silence, on
 // its own printer's journal, and the fleet would simply stop updating.
 //
-// So: download what the world sees and verify it the way an agent does — against
-// the public keys baked into agent-go/main.go.
+// So: download what the world sees and verify it the way an agent does: against
+// the public keys baked into main.go.
 //
 //   node scripts/verify-agent-release.mjs                      # https://app.hotend.app
 //   node scripts/verify-agent-release.mjs http://127.0.0.1:8080
@@ -21,7 +21,7 @@ import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
-// This monorepo keeps the agent in agent-go/; the public hotend-agent repo keeps
+// The private monorepo keeps the agent in agent-go/; the public hotend-agent repo keeps
 // main.go at its root. Find whichever layout we're sitting in, so the SAME script
 // can ship in both places and anyone can verify a release against the source.
 const AGENT_DIR = [join(HERE, '..', 'agent-go'), join(HERE, '..')].find((d) => existsSync(join(d, 'main.go'))) || join(HERE, '..', 'agent-go')
@@ -45,14 +45,14 @@ const KEYS = trustedKeys().map(keyOf)
 
 // Multi-MB downloads through Cloudflare occasionally hiccup (525s, resets). A
 // transient blip must not read as "the release is broken", so each fetch gets a
-// couple of retries — a real problem fails all of them.
+// couple of retries; a real problem fails all of them.
 async function get(path, { text = false, tries = 3 } = {}) {
   let last
   for (let i = 1; i <= tries; i++) {
     try {
       const r = await fetch(`${BASE}${path}`, { signal: AbortSignal.timeout(120_000), headers: { connection: 'close' } })
       // The relay caps binary downloads per IP. Retrying won't help (the window is
-      // an hour) and this says NOTHING about the release — so say so plainly rather
+      // an hour) and this says NOTHING about the release, so say so plainly rather
       // than letting a publish read it as a corrupt artifact.
       if (r.status === 429) throw new Error(`rate limited by the relay (retry after ${r.headers.get('retry-after') || '?'}s) — NOT a release problem`)
       if (!r.ok) throw new Error(`HTTP ${r.status}`)
@@ -79,13 +79,13 @@ const served = await get('/agent-bin/version', { text: true }).catch((e) => { no
 if (!served) process.exit(1)
 note(/^[0-9]{4}(\.[0-9]{1,4}){1,3}$/.test(served), `advertised version: ${served}`)
 
-// The source constant must match what's advertised — otherwise the run-and-report
+// The source constant must match what's advertised, otherwise the run-and-report
 // guard in the agent rejects the update on every printer.
 const inSource = readFileSync(join(AGENT_DIR, 'main.go'), 'utf8').match(/agentVersion\s*=\s*"([0-9.]+)"/)?.[1]
 note(inSource === served, `agent-go/main.go says ${inSource}, relay advertises ${served}`)
 
 // Signed manifest (when published) must verify and match the advertised version
-// and each binary's sha256. Older releases may 404 — that's a soft skip.
+// and each binary's sha256. Older releases may 404, which is a soft skip.
 let manifest = null
 {
   let manRaw, manSig
@@ -140,7 +140,7 @@ for (const arch of ARCHES) {
 }
 
 // Exit 2 = "could not check" (the relay rate-limited us), which is NOT the same as
-// "the release is bad". publish-agent.sh distinguishes them so a throttled verifier
+// "the release is bad". The publish script distinguishes them so a throttled verifier
 // never gets reported as a corrupt release.
 const throttled = fail.length > 0 && fail.every((m) => m.includes('rate limited'))
 if (throttled) {

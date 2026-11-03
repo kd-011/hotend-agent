@@ -9,10 +9,10 @@
 #
 # The binary lives in the service user's HOME, not /usr/local/bin, on purpose:
 # self-update swaps the binary in place, so the running user must own the file
-# and its directory. NEVER fix that by running the service as root — the agent
+# and its directory. NEVER fix that by running the service as root: the agent
 # needs no privileges at all. If you'd rather have a root-owned binary that the
 # agent cannot touch, put it in /usr/local/bin AND set
-# Environment=HOTEND_AGENT_AUTO_UPDATE=off — self-update would fail against a
+# Environment=HOTEND_AGENT_AUTO_UPDATE=off. Self-update would fail against a
 # root-owned path anyway (it fails safe, nothing breaks), so turn it off and
 # update by reinstalling.
 # (The supported `curl | sh` installer sets all of this up as a *user* unit in

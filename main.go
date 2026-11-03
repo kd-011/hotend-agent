@@ -1,6 +1,6 @@
-// Hotend printer agent — single static binary, no runtime deps. Dials OUT to the
+// Hotend printer agent: a single static binary with no runtime deps. Dials OUT to the
 // relay, then bridges whatever the relay sends to the local Moonraker (+ webcam).
-// A faithful port of scripts/relay-agent.mjs (same framed protocol).
+// Speaks the same framed protocol as the older Node agent.
 package main
 
 import (
@@ -36,21 +36,21 @@ import (
 // advertises (see selfUpdate). Date-based so "newer" is obvious.
 const agentVersion = "2026.09.06.1"
 
-// Updates must be SIGNED. The relay serves <binary>.sig — hex ed25519 over the
-// exact binary bytes — and selfUpdate refuses anything that doesn't verify
+// Updates must be SIGNED. The relay serves <binary>.sig (hex ed25519 over the
+// exact binary bytes) and selfUpdate refuses anything that doesn't verify
 // against one of these baked-in public keys. The private key lives offline with
-// the maintainer (scripts/sign-agent-release.mjs), NOT on the droplet: a
+// the maintainer, NOT on the server that hosts the relay: a
 // compromised relay can advertise whatever version it likes, but it cannot mint
 // a signature, so nothing unsigned ever installs.
 //
 // A LIST, not a constant, so the key can be ROTATED without stranding the fleet:
 // ship a release that trusts both the old and the new key, wait for agents to
 // adopt it, then publish one signed by the new key and drop the old entry. With a
-// single key there is no path off it — a lost key means no more updates, ever.
+// single key there is no path off it: a lost key means no more updates, ever.
 var updatePubKeysHex = []string{
-	// Primary — signs every routine release (~/.config/hotend/agent-signing.pem).
+	// Primary: signs every routine release.
 	"6ebe81a90a883f61d6ca9c1947de6fce4b591c895f1c8cc7812e08311394af68",
-	// Disaster-recovery backup — private half lives OFFLINE, physically separate
+	// Disaster-recovery backup: private half lives OFFLINE, physically separate
 	// from the primary. Only ever used to sign the release that rotates off a
 	// lost or compromised primary. Losing one key no longer strands the fleet.
 	"fa752823ce4cdeea2fda15a7ac297b1595d63fdc52a8f3f37fa5ab31ef5d0525",
@@ -75,7 +75,7 @@ var (
 	claim     = os.Getenv("HOTEND_CLAIM")
 	// Identity lives in a DURABLE, install-dir-independent location so a reinstall
 	// (which typically wipes ~/.hotend-agent) never loses the printerId + device
-	// secret — losing them orphans the printer and forces a confusing re-pair.
+	// secret, and losing them orphans the printer and forces a confusing re-pair.
 	statePath = env("HOTEND_AGENT_STATE", defaultStatePath())
 )
 
@@ -193,7 +193,7 @@ type agentState struct {
 	PendingVersion string `json:"pendingVersion,omitempty"`
 	PendingSince   string `json:"pendingSince,omitempty"` // RFC3339
 	PendingBoots   int    `json:"pendingBoots,omitempty"`
-	// Versions that were installed and could not connect. Never installed again —
+	// Versions that were installed and could not connect. Never installed again,
 	// otherwise a reverted agent just re-downloads the broken release it escaped.
 	BadVersions []string `json:"badVersions,omitempty"`
 }
@@ -203,7 +203,7 @@ func loadState() agentState {
 	if b, err := os.ReadFile(statePath); err == nil {
 		json.Unmarshal(b, &s)
 	}
-	// No identity at the durable path — before minting a brand-new one (which would
+	// No identity at the durable path. Before minting a brand-new one (which would
 	// orphan an already-linked printer), try to migrate from a legacy location. A
 	// reinstall that moved/removed the old install dir keeps the SAME printer.
 	if s.PrinterID == "" {
@@ -274,7 +274,7 @@ func main() {
 	// Everything below this point can fail on a bad release. These two lines run
 	// FIRST, before any check that could exit, because they are what makes a bad
 	// release survivable: the probation check reverts a binary that can't work,
-	// and the updater keeps polling even if the rest of startup refuses to run —
+	// and the updater keeps polling even if the rest of startup refuses to run,
 	// so a fix can always be published instead of visiting every printer.
 	checkPendingUpdate()
 	go updateLoop()
@@ -330,7 +330,7 @@ const (
 	updateProveBoots = 3
 )
 
-// Set on the first successful relay connection — the proof that the running
+// Set on the first successful relay connection: the proof that the running
 // binary actually works.
 var connectedOnce atomic.Bool
 
@@ -344,7 +344,7 @@ func clearPending(s *agentState) {
 func updateLoop() {
 	// Give main a moment to load the printer identity, so the relay can honour the
 	// account's auto-update opt-out. If startup never gets that far we poll anyway
-	// — an agent that can't start is exactly the one that needs a new binary.
+	// because an agent that can't start is exactly the one that needs a new binary.
 	for i := 0; i < 30 && printerID() == ""; i++ {
 		time.Sleep(time.Second)
 	}
@@ -370,13 +370,13 @@ func jitter(max time.Duration) time.Duration {
 // anything else in main. A binary that was just installed is on probation: if it
 // burns updateProveBoots boots without ever reaching the relay, the previous
 // binary goes back in and the version is blacklisted. Without this, a release
-// that dies during startup is unrecoverable remotely — the old binary is gone,
+// that dies during startup is unrecoverable remotely: the old binary is gone,
 // the downgrade guard refuses anything older, and every printer needs a visit.
 func checkPendingUpdate() {
 	defer func() { _ = recover() }()
 	// Only write a release off when the relay is actually reachable. A printer
 	// whose internet died right after updating would otherwise blacklist a
-	// perfectly good version — the boot counter stays over the line, so the revert
+	// perfectly good version. The boot counter stays over the line, so the revert
 	// simply happens on the first boot that has a network.
 	if why := pendingBootVerdict(); why != "" && relayReachable() {
 		revertUpdate(why)
@@ -411,7 +411,7 @@ func watchPendingUpdate() {
 	if readState().PendingVersion != agentVersion {
 		return
 	}
-	// Keep waiting while the printer simply has no internet — that says nothing
+	// Keep waiting while the printer simply has no internet, which says nothing
 	// about the binary. Only a relay we can reach over HTTP, and still cannot open
 	// a WebSocket to, condemns the release.
 	for i := 0; i < 8; i++ {
@@ -426,7 +426,7 @@ func watchPendingUpdate() {
 	}
 }
 
-// relayReachable reports whether the relay answers HTTP at all — the discriminator
+// relayReachable reports whether the relay answers HTTP at all: the difference
 // between "this binary is broken" and "this printer is offline".
 func relayReachable() bool {
 	if relayURL == "" {
@@ -541,7 +541,7 @@ func sha256Hex(data []byte) string {
 }
 
 // fetchReleaseManifest downloads and verifies the signed release manifest.
-// ok=false with a nil error means "not published" (404) — callers may fall back
+// ok=false with a nil error means "not published" (404), and callers may fall back
 // for one transition release. Any other failure is fail-closed (non-nil error).
 func fetchReleaseManifest(cl *http.Client, httpBase, wantVersion string) (releaseManifest, bool, error) {
 	r, err := cl.Get(httpBase + "/agent-bin/manifest")
@@ -583,13 +583,13 @@ func fetchReleaseManifest(cl *http.Client, httpBase, wantVersion string) (releas
 }
 
 // selfUpdate pulls a newer agent binary when the relay advertises one. It
-// downloads the binary, VERIFIES the release signature (offline key — see
+// downloads the binary, VERIFIES the release signature (offline key, see
 // updatePubKeyHex) and that the binary runs and reports the advertised version
 // (so a corrupt/wrong binary can never replace a working one), atomically
-// swaps it in, and exits — systemd (Restart=always) relaunches the new binary.
+// swaps it in, and exits; systemd (Restart=always) relaunches the new binary.
 func selfUpdate() {
 	defer func() { _ = recover() }() // never let an update attempt crash the agent
-	// Local kill switch — the owner's box, the owner's call. The account-level
+	// Local kill switch: the owner's box, the owner's call. The account-level
 	// toggle (Account tab) is enforced relay-side via the ?printer param below;
 	// this env var works even if you trust nothing the relay says.
 	switch strings.ToLower(env("HOTEND_AGENT_AUTO_UPDATE", "on")) {
@@ -614,7 +614,7 @@ func selfUpdate() {
 	resp.Body.Close()
 	latest := strings.TrimSpace(string(vb))
 	if latest == "" || !versionNewer(latest, agentVersion) {
-		return // up to date, opted out (empty), or a downgrade — never go backwards
+		return // up to date, opted out (empty), or a downgrade: never go backwards
 	}
 	// A version this printer already tried and rolled back from is not installed
 	// again, however loudly the relay advertises it.
@@ -671,7 +671,7 @@ func selfUpdate() {
 			return
 		}
 	}
-	// Per-binary release signature — kept as defense in depth beside the manifest.
+	// Per-binary release signature, kept as defense in depth beside the manifest.
 	// No valid sig, no install. Fail closed and say why: this is the line that
 	// makes a compromised relay unable to push code.
 	r3, err := cl.Get(httpBase + "/agent-bin/" + binName + ".sig")
@@ -699,7 +699,7 @@ func selfUpdate() {
 		os.Remove(tmp)
 		return
 	}
-	// Keep the binary we're about to replace. The droplet only ever serves the
+	// Keep the binary we're about to replace. The server only ever serves the
 	// current release and the downgrade guard refuses older versions, so this copy
 	// is the ONLY thing a rollback can use (see revertUpdate).
 	if cur, err := os.ReadFile(self); err == nil {
@@ -727,7 +727,7 @@ func selfUpdate() {
 // Exiting and trusting a service manager to start us again is how a printer goes
 // dark on a successful update: install-agent.sh falls back to running the agent in
 // the FOREGROUND when the host has no systemd user session (locked-down printer
-// boards), and there the exit IS the shutdown — no unit, nothing to restart it,
+// boards), and there the exit IS the shutdown: no unit, nothing to restart it,
 // invisible until someone logs into the printer. exec keeps the same PID, so a
 // systemd unit doesn't even notice, and there's no gap where the printer is offline.
 func restartSelf() {
@@ -739,7 +739,7 @@ func restartSelf() {
 }
 
 // signedByTrustedKey reports whether sig is a valid release signature over data
-// under ANY key the fleet trusts (see updatePubKeysHex — a list so keys can be
+// under ANY key the fleet trusts (see updatePubKeysHex, a list so keys can be
 // rotated).
 func signedByTrustedKey(data, sig []byte) bool {
 	for _, h := range updatePubKeysHex {
@@ -782,7 +782,7 @@ func connect(id string) error {
 		u += "&claim=" + claim
 	}
 	// Present the device secret in a header (never the URL, which lands in logs).
-	// Empty on a brand-new/legacy agent — the relay issues one on first connect.
+	// Empty on a brand-new/legacy agent; the relay issues one on first connect.
 	// The version goes up too, so the relay can show which agents are behind.
 	hdr := http.Header{"X-Hotend-Agent-Version": {agentVersion}}
 	agentSecretMu.RLock()
@@ -796,7 +796,7 @@ func connect(id string) error {
 		return err
 	}
 	defer ws.Close()
-	// Reaching the relay is what proves a freshly installed binary works — it ends
+	// Reaching the relay is what proves a freshly installed binary works: it ends
 	// the probation started by selfUpdate.
 	if connectedOnce.CompareAndSwap(false, true) {
 		mutateState(func(s *agentState) {
@@ -813,7 +813,7 @@ func connect(id string) error {
 
 	// Detect a dead relay fast. Without this, a relay restart / network drop that
 	// doesn't send a clean RST leaves ReadMessage blocked for the whole TCP
-	// timeout (minutes) — the agent thinks it's still connected and never
+	// timeout (minutes), and the agent thinks it's still connected and never
 	// reconnects. We send a ping every 30s and require any frame (pong or data)
 	// within 70s; otherwise ReadMessage errors and we reconnect immediately.
 	const pongWait = 70 * time.Second
@@ -868,7 +868,7 @@ func (c *conn) dispatch(m *msg) {
 	case "linked":
 		fmt.Println("[agent] linked to account", m.Account)
 	case "config":
-		// Live config from the relay. Currently just the webcam URL override —
+		// Live config from the relay. Currently just the webcam URL override;
 		// empty string clears it back to the installed default.
 		webcamMu.Lock()
 		webcamOverride = m.WebcamURL
@@ -879,7 +879,7 @@ func (c *conn) dispatch(m *msg) {
 			fmt.Println("[agent] webcam URL reset to default")
 		}
 	case "device-secret":
-		// The relay issued (or backfilled) our device secret — persist it and use it
+		// The relay issued (or backfilled) our device secret. Persist it and use it
 		// on every reconnect from now on.
 		if m.Secret != "" {
 			agentSecretMu.Lock()
@@ -909,7 +909,7 @@ func (c *conn) dispatch(m *msg) {
 			go c.doFetch(m.ID, v.(*reqBuf))
 		}
 	case "cancel":
-		// Relay says the client hung up (or the stream timed out) — stop pumping.
+		// Relay says the client hung up (or the stream timed out), stop pumping.
 		// Critical for webcam MJPEG: its body never EOFs, so without this the
 		// fetch goroutine would read the camera + encode frames forever.
 		if v, ok := c.cancels.Load(m.ID); ok {
@@ -949,11 +949,11 @@ func (c *conn) dispatch(m *msg) {
 
 // resolvePrivateHost restricts tunnel targets to the LAN: every resolved
 // address must be private/loopback/link-local. The tunnel exists so the
-// relay's Bambu driver can reach a printer on THIS network — it must never
+// relay's Bambu driver can reach a printer on THIS network; it must never
 // let a compromised relay turn agents into open proxies to the internet.
 //
 // It returns one resolved IP for the caller to dial directly. Dialing the
-// hostname again after this check would re-resolve DNS — a rebinding relay
+// hostname again after this check would re-resolve DNS: a rebinding relay
 // could pass this check with a private answer and hand the dialer a public
 // one on the second lookup, bypassing the restriction entirely.
 func resolvePrivateHost(host string) (net.IP, bool) {
@@ -991,7 +991,7 @@ func (c *conn) doTCPOpen(id, host string, port int) {
 		n, er := tc.Read(buf)
 		if n > 0 {
 			if c.send(&msg{T: "tcpdata", ID: id, B64: base64.StdEncoding.EncodeToString(buf[:n])}) != nil {
-				break // relay WS gone — stop pumping
+				break // relay WS gone, stop pumping
 			}
 		}
 		if er != nil {
@@ -1039,7 +1039,7 @@ func (c *conn) doFetch(id string, r *reqBuf) {
 		return
 	}
 	// Cancellable context so a relay `cancel` frame (client hung up / stream timed
-	// out) tears the fetch down — vital for the never-EOFing webcam MJPEG stream.
+	// out) tears the fetch down, vital for the never-EOFing webcam MJPEG stream.
 	ctx, cancel := context.WithCancel(context.Background())
 	c.cancels.Store(id, cancel)
 	defer func() { cancel(); c.cancels.Delete(id) }()
@@ -1069,13 +1069,13 @@ func (c *conn) doFetch(id string, r *reqBuf) {
 		}
 	}
 	if c.send(&msg{T: "res", ID: id, Status: resp.StatusCode, Headers: out}) != nil {
-		return // WS dead — don't start pumping into a closed socket
+		return // WS dead, don't start pumping into a closed socket
 	}
 	b := make([]byte, 32*1024)
 	for {
 		n, er := resp.Body.Read(b)
 		if n > 0 {
-			// Stop the instant the WS write fails (relay restart / client gone) —
+			// Stop the instant the WS write fails (relay restart / client gone);
 			// the old code ignored this and streamed the camera to a dead socket
 			// for the life of the process.
 			if c.send(&msg{T: "body", ID: id, B64: base64.StdEncoding.EncodeToString(b[:n])}) != nil {
@@ -1107,8 +1107,8 @@ var smUpgrader = websocket.Upgrader{CheckOrigin: func(r *http.Request) bool { re
 
 func spoolmanHandler(w http.ResponseWriter, r *http.Request) {
 	// Moonraker opens a websocket (ws://…/api/v1/spool) for live spool updates and
-	// gates "spoolman_connected" (and usage sync) on it. We don't push events —
-	// the central store is the source of truth — so just accept it and hold it
+	// gates "spoolman_connected" (and usage sync) on it. We don't push events
+	// (the central store is the source of truth), so just accept it and hold it
 	// open (gorilla answers pings during ReadMessage) so Moonraker stays connected.
 	if strings.EqualFold(r.Header.Get("Upgrade"), "websocket") {
 		ws, err := smUpgrader.Upgrade(w, r, nil)
@@ -1174,7 +1174,7 @@ func pathOnly(p string) string {
 // only the path/query, never string-concatenating attacker-influenced input into
 // the authority.
 // buildWebcamURL proxies to the webcam stream. Unlike the Moonraker path (which
-// is a fixed API), the webcam lives at whatever HOTEND_WEBCAM_URL points to —
+// is a fixed API), the webcam lives at whatever HOTEND_WEBCAM_URL points to:
 // mjpg-streamer at http://host:8080/ (stream at /?action=stream) OR crowsnest at
 // http://host/webcam/ (stream at /webcam/?action=stream). So we PRESERVE the
 // configured base path and only carry the request's query (action=stream|snapshot).
@@ -1219,10 +1219,10 @@ func buildWebcamHLS(base, p string) (string, error) {
 }
 
 // detectWebcam resolves the printer's camera. FIRST it asks Moonraker's webcam
-// registry (what Mainsail/Fluidd populate — knows crowsnest/camera-streamer/go2rtc/
+// registry (what Mainsail/Fluidd populate, knows crowsnest/camera-streamer/go2rtc/
 // MediaMTX + protocol); if that's empty (camera streaming but not registered), it
 // falls back to probing the common streamer layouts directly. Returns (baseURL,
-// "mjpeg"|"hls") or ("",""). Best-effort — failure keeps the install-time default.
+// "mjpeg"|"hls") or ("",""). Best-effort: failure keeps the install-time default.
 func detectWebcam() (string, string) {
 	if u, t := detectWebcamFromMoonraker(); u != "" {
 		return u, t
@@ -1231,8 +1231,8 @@ func detectWebcam() (string, string) {
 }
 
 // probeWebcam is the registry fallback: try the layouts crowsnest / camera-streamer
-// / mjpg-streamer serve — an MJPEG snapshot (native, preferred) first, then an HLS
-// playlist — on the Moonraker host (and :8080). Returns the working base + type.
+// / mjpg-streamer serve (an MJPEG snapshot (native, preferred) first, then an HLS
+// playlist) on the Moonraker host (and :8080). Returns the working base + type.
 func probeWebcam() (string, string) {
 	cl := &http.Client{Timeout: 4 * time.Second}
 	host := webcamHost()
@@ -1240,7 +1240,7 @@ func probeWebcam() (string, string) {
 		return "", ""
 	}
 	bases := []string{host + "/webcam", host + "/webcam2", host + "/usbcam", host + "/usbcam2", host + ":8080", host + "/cam", host}
-	for _, b := range bases { // MJPEG first — Hotend renders it natively (no hls.js)
+	for _, b := range bases { // MJPEG first, Hotend renders it natively (no hls.js)
 		if okJPEG(cl, strings.TrimRight(b, "/")+"/?action=snapshot") {
 			return strings.TrimRight(b, "/"), "mjpeg"
 		}
@@ -1284,8 +1284,8 @@ func okM3U8(cl *http.Client, u string) bool {
 	return n == 7 && string(b) == "#EXTM3U"
 }
 
-// detectWebcamFromMoonraker asks Moonraker's webcam registry — the list Mainsail/
-// Fluidd populate — for the configured stream + protocol.
+// detectWebcamFromMoonraker asks Moonraker's webcam registry (the list Mainsail/
+// Fluidd populate) for the configured stream + protocol.
 func detectWebcamFromMoonraker() (string, string) {
 	cl := &http.Client{Timeout: 5 * time.Second}
 	resp, err := cl.Get(localURL + "/server/webcams/list")
@@ -1316,7 +1316,7 @@ func detectWebcamFromMoonraker() (string, string) {
 		return absWebcam(host, hlsDir(w.StreamURL)), "hls"
 	}
 	// Everything else is MJPEG-family (mjpegstreamer[-adaptive], camera-streamer
-	// mjpeg, uv4l, …) — the base is the snapshot/stream path minus its query.
+	// mjpeg, uv4l, …): the base is the snapshot/stream path minus its query.
 	raw := w.SnapshotURL
 	if raw == "" {
 		raw = w.StreamURL
@@ -1394,7 +1394,7 @@ func buildLocalURL(base, p string) (string, error) {
 	}
 	// The path arrives ALREADY percent-encoded. url.URL.Path holds the DECODED
 	// path, so assigning the encoded string there makes String() escape the '%'
-	// itself — "%20" became "%2520" and Moonraker 404'd every file whose name
+	// itself: "%20" became "%2520" and Moonraker 404'd every file whose name
 	// contains a space or '+' (about half a typical g-code library, plus their
 	// timelapses and thumbnails). Set both fields: RawPath preserves the exact
 	// bytes, Path keeps them consistent so EscapedPath() trusts RawPath.
@@ -1464,7 +1464,7 @@ func (c *conn) handleMoonrakerSpoolman(id string, r *reqBuf) {
 			}
 			json.Unmarshal(r.buf.Bytes(), &sp)
 			// Mirror the choice into Moonraker straight away when it owns the
-			// counting — otherwise the switch only lands on the next sync tick
+			// counting, otherwise the switch only lands on the next sync tick
 			// and the print you start right now is deducted from the old spool.
 			if moonrakerOwnsSpool.Load() {
 				go syncMoonrakerSpool()
@@ -1505,7 +1505,7 @@ func (c *conn) handleMoonrakerSpoolman(id string, r *reqBuf) {
 
 // startFilamentTracking picks exactly ONE usage-counting path. When Moonraker
 // has a [spoolman] section (the installer wires it to our local endpoint),
-// Moonraker itself reports usage through serveSpoolman() — counting here too
+// Moonraker itself reports usage through serveSpoolman(), so counting here too
 // would deduct every print TWICE. Only a printer WITHOUT that config (bridge
 // mode, no moonraker.conf edit) gets the agent's own print_stats tracking.
 func startFilamentTracking() {
@@ -1513,7 +1513,7 @@ func startFilamentTracking() {
 		fmt.Println("[agent] Moonraker [spoolman] configured — filament usage comes from Moonraker; agent-side tracking off")
 		moonrakerOwnsSpool.Store(true)
 		// Standing down is only half the job: Moonraker deducts from the spool
-		// IT has selected, and nothing else ever sets that — choosing a spool in
+		// IT has selected, and nothing else ever sets that: choosing a spool in
 		// the app is intercepted by handleMoonrakerSpoolman and written to the
 		// central store, which Moonraker never sees. Its spool_id therefore sits
 		// at null and the printer records NOTHING while the app shows a healthy
@@ -1586,7 +1586,7 @@ func syncMoonrakerSpool() {
 
 // moonrakerHasSpoolman asks Moonraker for its config and reports whether a
 // [spoolman] section exists. Connection errors retry forever (Moonraker may
-// still be booting — same pattern as the webcam probe); any HTTP answer decides:
+// still be booting, same pattern as the webcam probe); any HTTP answer decides:
 // non-200 or unparseable is treated as "not configured" so bridge-mode printers
 // still get tracking.
 func moonrakerHasSpoolman() bool {
@@ -1616,7 +1616,7 @@ func moonrakerHasSpoolman() bool {
 }
 
 // trackFilament subscribes to Moonraker's print_stats and reports filament used
-// to the printer's active spool — replacing Moonraker's own [spoolman] usage sync,
+// to the printer's active spool, replacing Moonraker's own [spoolman] usage sync,
 // so filament is tracked for every print with just the agent (no printer config).
 func trackFilament() {
 	wsURL := strings.Replace(localURL, "http", "ws", 1) + "/websocket"

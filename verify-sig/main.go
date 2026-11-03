@@ -1,12 +1,12 @@
-// verify-sig — a tiny, dependency-free ed25519 signature checker.
+// verify-sig: a tiny, dependency-free ed25519 signature checker.
 //
-// Used ONLY by scripts/install-agent.sh, and only on a FIRST install: the agent
+// Used ONLY by the installer, and only on a FIRST install: the agent
 // itself verifies every self-update with Go's own crypto/ed25519 (see
 // signedByTrustedKey in ../main.go), but a shell script has no ed25519 of its
 // own and the printer doesn't have the agent yet to borrow it from. The
 // installer used to shell out to system openssl for this, which is
-// inconsistent across printer images — missing entirely on some, too old to do
-// one-shot Ed25519 (-rawin) on others — and silently skipped verification
+// inconsistent across printer images (missing entirely on some, too old to do
+// one-shot Ed25519 (-rawin) on others) and silently skipped verification
 // whenever it hit either case. This binary removes that dependency: it's
 // static, a couple MB, and does exactly one thing, so "can we check the
 // signature" no longer depends on what happens to be installed on the box.

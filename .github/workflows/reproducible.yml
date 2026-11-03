@@ -27,7 +27,7 @@ jobs:
 
       # Releases before v2026.08.01.4 predate the reproducible pipeline (they
       # were built before the toolchain was pinned) and can never byte-match a
-      # rebuild. Verifying them would only produce a red X that says nothing —
+      # rebuild. Verifying them would only produce a red X that says nothing,
       # so say the true thing instead and stop.
       - name: this release predates reproducible builds?
         id: era
@@ -35,7 +35,7 @@ jobs:
           t="${{ steps.tag.outputs.tag }}"; t="${t#v}"; base="2026.08.01.4"
           if [ "$t" != "$base" ] && [ "$(printf '%s\n' "$t" "$base" | sort -V | head -1)" = "$t" ]; then
             echo "skip=true" >> "$GITHUB_OUTPUT"
-            echo "::notice::${t} predates the reproducible pipeline (first reproducible release: v${base}) — nothing to verify."
+            echo "::notice::${t} predates the reproducible pipeline (first reproducible release: v${base}), nothing to verify."
           else
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
@@ -49,7 +49,7 @@ jobs:
         if: steps.era.outputs.skip != 'true'
         with:
           # Byte-identical output needs the exact toolchain the release was
-          # built with — a different patch version may legitimately produce
+          # built with: a different patch version may legitimately produce
           # different (equally correct) bytes and would fail the comparison.
           go-version: '1.22.2'
           cache-dependency-path: go.sum
