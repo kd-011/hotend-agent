@@ -17,8 +17,8 @@ jobs:
   agent:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
         with:
           go-version-file: go.mod
           cache-dependency-path: go.sum
@@ -45,3 +45,12 @@ jobs:
 
       - name: test
         run: CGO_ENABLED=0 go test ./...
+
+      # The README's try-it-now command. If the agent's startup or request
+      # forwarding changes in a way the page no longer describes, this fails.
+      - name: stand-in relay run (README example)
+        run: |
+          node scripts/stub-relay.mjs ./hotend-agent-linux-amd64 | tee stub.txt
+          grep -q 'asks the agent: GET /printer/info' stub.txt
+          grep -q 'moonraker GET /printer/info' stub.txt
+          grep -q 'sent reply to request 2: status 200' stub.txt

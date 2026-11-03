@@ -40,12 +40,12 @@ jobs:
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         if: steps.era.outputs.skip != 'true'
         with:
           ref: ${{ steps.tag.outputs.tag }}
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v7
         if: steps.era.outputs.skip != 'true'
         with:
           # Byte-identical output needs the exact toolchain the release was

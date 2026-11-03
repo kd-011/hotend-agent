@@ -14,7 +14,7 @@ So a pull request that edits agent code can't be merged as it stands. This is wh
 
 You can skip the pull request. An issue with the failing behaviour and a suggested fix is just as useful.
 
-Documentation, templates, the issue and pull request forms and the workflows in `.github/` are edited here directly, and pull requests against those merge normally.
+Documentation (the README and `docs/`), `scripts/stub-relay.mjs`, templates, the issue and pull request forms and the workflows in `.github/` are edited here directly, and pull requests against those merge normally.
 
 ## Releases
 
