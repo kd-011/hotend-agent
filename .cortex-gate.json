@@ -1,0 +1,15 @@
+{
+  "testFiles": "CGO_ENABLED=0 go test $(printf '%s\\n' {files} | xargs -n1 dirname | sort -u | sed 's#^#./#')",
+  "mutation": "node scripts/gate-mutation.mjs {files} {ranges}",
+  "mutationPaths": ["main.go", "restart_*.go"],
+  "riskyPaths": [
+    "main.go",
+    "restart_*.go",
+    "verify-sig/**",
+    "scripts/verify-agent-release.mjs",
+    "go.mod",
+    "go.sum",
+    "systemd/**",
+    ".github/workflows/reproducible.yml"
+  ]
+}
