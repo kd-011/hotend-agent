@@ -1,0 +1,11 @@
+# hotend-agent: decisions
+
+Why the project is the way it is, newest first. One entry per decision: the date it was made, what was decided, and why. Entries are records: when a decision stops being true, leave it and add `Superseded YYYY-MM-DD: <what replaced it>.` to its end, then add the new decision above.
+
+- 2026-11-22: Project docs live in this repo (AGENTS.md, docs/), and the dossier points at them. Why: agents working in a clone or worktree never see the dossier.
+- 2026-11-01: The repo moved to `kd-011/hotend-agent` by GitHub transfer, keeping history and releases. Why: not recorded. Earlier commits stay authored as `hotend-3dprinting`. Supersedes the 2026-07-21 hosting decision.
+- 2026-08-01: First installs fail closed on signature verification, through the dependency-free `verify-sig` checker instead of system openssl. Why: openssl is missing or too old for one-shot Ed25519 on some printer images, and the old check was skipped silently there. Still true: `verify-sig/main.go` exits 1 on anything but a verified signature.
+- 2026-08-01: A second, offline backup key is trusted, and releases are built reproducibly with the official go.dev Go 1.22.2 toolchain, explicit `GOARM=7` and `-buildvcs=false`. Sigstore was rejected. Why: losing the only key would strand every printer, and anyone should be able to rebuild a release and compare bytes. Still true: two keys in `updatePubKeysHex`, Go 1.22.2 pinned in `.github/workflows/reproducible.yml`.
+- 2026-07-30: Self-updates must be signed offline, and the signing key never touches the server that hosts the relay. Why: a compromised relay can advertise any version but cannot mint a signature, so nothing unsigned installs. Still true: `selfUpdate` refuses a binary or manifest that no compiled-in key verifies.
+- 2026-07-21: The agent is published as an MIT mirror under a product account (`hotend-3dprinting`), as the only public repo, so the code that runs on customer hardware can be read and the maintainer's personal account stays free of public repos. Superseded 2026-11-01: moved to `kd-011/hotend-agent`.
+- 2026-07-15: The agent was rewritten from Node to a static Go binary. Why: Klipper hosts have no Node. Still true: `main.go` is a static, dependency-light Go program that speaks the framed protocol of the older Node agent.
