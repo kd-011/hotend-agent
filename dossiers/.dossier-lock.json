@@ -358,6 +358,2132 @@
       },
       "pinnedAt": "2026-11-03T07:48:00.028Z",
       "head": "404f30989530f5ca93f2d0f1527668fca30f34d0"
+    },
+    "hotend-agent-agents": {
+      "claims": {
+        "bd90870f3a67": {
+          "text": "Needs Go 1.22 or newer; the scripts need Node 18.",
+          "line": 15,
+          "specs": [
+            "go.mod",
+            "CONTRIBUTING.md:25",
+            "README.md:11"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "go.mod": {
+              "path": "go.mod",
+              "blob": "a2607737b668abf5b977e7138a191f3a9a4c9530",
+              "commit": "44a3b5f3454e1107a1147be66f07ff1859211cba"
+            },
+            "CONTRIBUTING.md": {
+              "path": "CONTRIBUTING.md",
+              "blob": "4b11cb36aac8d36975c74bcb7d4b37fede8a6727",
+              "commit": "d2bc58949f4a05d6b7f16c68a7d7b2cc9cddefc0",
+              "range": {
+                "start": 25,
+                "end": 25,
+                "hash": "f406166bccab5dd8deea71903ddd593017e438dd"
+              }
+            },
+            "README.md": {
+              "path": "README.md",
+              "blob": "9e7b5ba258d7ce6312d03482cfd201f3db9cea12",
+              "commit": "d2bc58949f4a05d6b7f16c68a7d7b2cc9cddefc0",
+              "range": {
+                "start": 11,
+                "end": 11,
+                "hash": "afb1e4625255e4a9ee928ef387fcd522e71011b9"
+              }
+            }
+          }
+        },
+        "72494612b6db": {
+          "text": "`make` builds the host binary `./hotend-agent`. `make dist` cross-compiles linux amd64, arm (GOARM=7) and arm64, plus `verify-sig`, into `dist/`.",
+          "line": 16,
+          "specs": [
+            "Makefile:18-30"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "Makefile": {
+              "path": "Makefile",
+              "blob": "23443391a99126982af8006d67f8185673c21477",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 18,
+                "end": 30,
+                "hash": "6d0f1ab6a5c7ecfd6bb5cbf0f0a38b6e9e59a096"
+              }
+            }
+          }
+        },
+        "f2229d8f2e05": {
+          "text": "`make test` runs `go vet ./...` then `go test ./...`. CI runs `CGO_ENABLED=0 go vet ./...` and `CGO_ENABLED=0 go test ./...`.",
+          "line": 17,
+          "specs": [
+            "Makefile:32-34",
+            ".github/workflows/ci.yml:29-47"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "Makefile": {
+              "path": "Makefile",
+              "blob": "23443391a99126982af8006d67f8185673c21477",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 32,
+                "end": 34,
+                "hash": "33703febf61d939ff31b552a581da4eb2a758930"
+              }
+            },
+            ".github/workflows/ci.yml": {
+              "path": ".github/workflows/ci.yml",
+              "blob": "3ab706bb5cde79e88652823336ebbe0a05ea433f",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 29,
+                "end": 47,
+                "hash": "94eb3c57b4357c86c4c3c6ba93f33f8f2269a5ce"
+              }
+            }
+          }
+        },
+        "ec9f6068042b": {
+          "text": "Format with `gofmt -w .`; CI fails when `gofmt -l .` prints anything. There is no other linter.",
+          "line": 18,
+          "specs": [
+            ".github/workflows/ci.yml:26-27"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            ".github/workflows/ci.yml": {
+              "path": ".github/workflows/ci.yml",
+              "blob": "3ab706bb5cde79e88652823336ebbe0a05ea433f",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 26,
+                "end": 27,
+                "hash": "ef54dd0f873a7cb7069b9488a31d8738b1c83bec"
+              }
+            }
+          }
+        },
+        "58256a43ebeb": {
+          "text": "Run the agent by hand with `HOTEND_RELAY_URL=wss://... ./hotend-agent`. `./hotend-agent -version` prints the version and exits.",
+          "line": 19,
+          "specs": [
+            "main.go:269-273",
+            "main.go:281-284"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 269,
+                "end": 273,
+                "hash": "09db39aee5e5a3f4bd214eb2673271e1e0e2256c"
+              }
+            },
+            "main.go:281-284": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 281,
+                "end": 284,
+                "hash": "7932c0ddb346db168ed08f5529262f484c700a84"
+              }
+            }
+          }
+        },
+        "598329979a49": {
+          "text": "`make && node scripts/stub-relay.mjs ./hotend-agent` runs the agent against a stand-in relay and Moonraker on loopback, with a throwaway state file, and prin...",
+          "line": 20,
+          "specs": [
+            "scripts/stub-relay.mjs:1-10",
+            ".github/workflows/ci.yml:49-56"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "scripts/stub-relay.mjs": {
+              "path": "scripts/stub-relay.mjs",
+              "blob": "29d0ca2b873b4ee4d36acbeae7946ab09050e26e",
+              "commit": "d2bc58949f4a05d6b7f16c68a7d7b2cc9cddefc0",
+              "range": {
+                "start": 1,
+                "end": 10,
+                "hash": "a4a128802fa69879710d6df9e214a4fd17365581"
+              }
+            },
+            ".github/workflows/ci.yml": {
+              "path": ".github/workflows/ci.yml",
+              "blob": "3ab706bb5cde79e88652823336ebbe0a05ea433f",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 49,
+                "end": 56,
+                "hash": "6eb02c9e57de45768bbf870df8d1c9a637433150"
+              }
+            }
+          }
+        },
+        "560d784d6ab8": {
+          "text": "`node scripts/verify-agent-release.mjs [base-url] [--local]` downloads what the relay serves and checks signatures, the signed manifest and its hashes agains...",
+          "line": 21,
+          "specs": [
+            "scripts/verify-agent-release.mjs:1-20"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "scripts/verify-agent-release.mjs": {
+              "path": "scripts/verify-agent-release.mjs",
+              "blob": "929846aab0269c3cd12336d7f7d26a5e8f7d1f67",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 1,
+                "end": 20,
+                "hash": "e0d2b480c640e70088ab1283a6ac5f1744d8d376"
+              }
+            }
+          }
+        },
+        "d856a1daffeb": {
+          "text": "The merge gate runs `go test` per changed package and gremlins mutation testing through `scripts/gate-mutation.mjs`.",
+          "line": 22,
+          "specs": [
+            ".cortex-gate.json",
+            "scripts/gate-mutation.mjs:1-16"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            ".cortex-gate.json": {
+              "path": ".cortex-gate.json",
+              "blob": "e4acaf62c11d5ae372886bbbbf2445784e0eb5fc",
+              "commit": "9700e2083c9fe7cc0c44dcb75ca13e15e67beb1b"
+            },
+            "scripts/gate-mutation.mjs": {
+              "path": "scripts/gate-mutation.mjs",
+              "blob": "158f4b4c2b4d4a7dd82ddee3671bcbef32a68af7",
+              "commit": "9700e2083c9fe7cc0c44dcb75ca13e15e67beb1b",
+              "range": {
+                "start": 1,
+                "end": 16,
+                "hash": "2f11e767a4559d59d503f8443756d4173a8dea36"
+              }
+            }
+          }
+        },
+        "0b0443c44c2f": {
+          "text": "One `package main` in `main.go` holds the whole agent, with tests in `main_test.go`. `verify-sig/` is a second `package main` in the same module.",
+          "line": 26,
+          "specs": [
+            "main.go:4",
+            "verify-sig/main.go:16",
+            "go.mod"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 4,
+                "end": 4,
+                "hash": "04eb6f1bdaf51ae48ed5cf0153fad8593467b778"
+              }
+            },
+            "verify-sig/main.go": {
+              "path": "verify-sig/main.go",
+              "blob": "96d8aa80d6b8b1ea2a0e438b18c96143a2b585a9",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 16,
+                "end": 16,
+                "hash": "d9235732dab80b9318d9b8bad4d49272a55953c8"
+              }
+            },
+            "go.mod": {
+              "path": "go.mod",
+              "blob": "a2607737b668abf5b977e7138a191f3a9a4c9530",
+              "commit": "44a3b5f3454e1107a1147be66f07ff1859211cba"
+            }
+          }
+        },
+        "213126c7f608": {
+          "text": "Dependencies stay at the standard library plus `gorilla/websocket`.",
+          "line": 27,
+          "specs": [
+            "CONTRIBUTING.md:37",
+            "go.mod"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "CONTRIBUTING.md": {
+              "path": "CONTRIBUTING.md",
+              "blob": "4b11cb36aac8d36975c74bcb7d4b37fede8a6727",
+              "commit": "d2bc58949f4a05d6b7f16c68a7d7b2cc9cddefc0",
+              "range": {
+                "start": 37,
+                "end": 37,
+                "hash": "1680d72de1f75bec7df43c35040b4727d064f7df"
+              }
+            },
+            "go.mod": {
+              "path": "go.mod",
+              "blob": "a2607737b668abf5b977e7138a191f3a9a4c9530",
+              "commit": "44a3b5f3454e1107a1147be66f07ff1859211cba"
+            }
+          }
+        },
+        "35143a2be54e": {
+          "text": "Configuration is environment variables only, read once at package init.",
+          "line": 28,
+          "specs": [
+            "main.go:59-80"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 59,
+                "end": 80,
+                "hash": "21da834ed8ee45b2b5e0996c927c5a765519f49c"
+              }
+            }
+          }
+        },
+        "7d169899e5b2": {
+          "text": "A change to a guard (signature check, version check, rollback, local-only request targets) needs a test that fails when the guard is weakened.",
+          "line": 29,
+          "specs": [
+            "CONTRIBUTING.md:38",
+            ".github/PULL_REQUEST_TEMPLATE.md:7-8"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "CONTRIBUTING.md": {
+              "path": "CONTRIBUTING.md",
+              "blob": "4b11cb36aac8d36975c74bcb7d4b37fede8a6727",
+              "commit": "d2bc58949f4a05d6b7f16c68a7d7b2cc9cddefc0",
+              "range": {
+                "start": 38,
+                "end": 38,
+                "hash": "86169e43afa5e36db33233437186561b23b8f72b"
+              }
+            },
+            ".github/PULL_REQUEST_TEMPLATE.md": {
+              "path": ".github/PULL_REQUEST_TEMPLATE.md",
+              "blob": "9d028e468e167a3515192c7c2ac29e3bcdaca806",
+              "commit": "003f82fca660faaa4c8749476571c1b1a87d3b27",
+              "range": {
+                "start": 7,
+                "end": 8,
+                "hash": "20cad282a90886fa830473d20e97da1d2a887d0f"
+              }
+            }
+          }
+        },
+        "b1a3cf4d96bf": {
+          "text": "Builds are `CGO_ENABLED=0 -trimpath -buildvcs=false -ldflags \"-s -w\"`. Keep them: they make the binary static and reproducible.",
+          "line": 30,
+          "specs": [
+            "Makefile:4-14"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "Makefile": {
+              "path": "Makefile",
+              "blob": "23443391a99126982af8006d67f8185673c21477",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 4,
+                "end": 14,
+                "hash": "b57e3a708d9a9fe4c6d4e53c15458a6fcceb5cc0"
+              }
+            }
+          }
+        },
+        "544536879643": {
+          "text": "Write state through `mutateState`, not by building an `agentState` and calling `saveState`, which drops fields the caller forgot.",
+          "line": 31,
+          "specs": [
+            "main.go:244-259"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 244,
+                "end": 259,
+                "hash": "1c980cd6d346bb489033ceb762881af775022209"
+              }
+            }
+          }
+        },
+        "dea32c252ad4": {
+          "text": "The version is date-based (`YYYY.MM.DD.N`) in `agentVersion`. Only the maintainer cuts releases, so do not bump it.",
+          "line": 32,
+          "specs": [
+            "main.go:35-37",
+            "CONTRIBUTING.md:21"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 35,
+                "end": 37,
+                "hash": "3a972f414ca6f4d27b0adf4d970fc57ad6e29056"
+              }
+            },
+            "CONTRIBUTING.md": {
+              "path": "CONTRIBUTING.md",
+              "blob": "4b11cb36aac8d36975c74bcb7d4b37fede8a6727",
+              "commit": "d2bc58949f4a05d6b7f16c68a7d7b2cc9cddefc0",
+              "range": {
+                "start": 21,
+                "end": 21,
+                "hash": "d97670b8e3a2e9323b78ad03e2319db6222b0661"
+              }
+            }
+          }
+        },
+        "176c64b3013f": {
+          "text": "Commit messages and prose are plain, with no em dashes.",
+          "line": 33,
+          "specs": [
+            "CONTRIBUTING.md:39"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "CONTRIBUTING.md": {
+              "path": "CONTRIBUTING.md",
+              "blob": "4b11cb36aac8d36975c74bcb7d4b37fede8a6727",
+              "commit": "d2bc58949f4a05d6b7f16c68a7d7b2cc9cddefc0",
+              "range": {
+                "start": 39,
+                "end": 39,
+                "hash": "7182d1718b832b73c2aa003a3477c08564189ef9"
+              }
+            }
+          }
+        },
+        "0adf6a1a46fe": {
+          "text": "Docs, `scripts/stub-relay.mjs`, templates and `.github/` are edited here. The agent source is a published copy of a private monorepo: `main.go`, `main_test.g...",
+          "line": 34,
+          "specs": [
+            "CONTRIBUTING.md:5-17"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "CONTRIBUTING.md": {
+              "path": "CONTRIBUTING.md",
+              "blob": "4b11cb36aac8d36975c74bcb7d4b37fede8a6727",
+              "commit": "d2bc58949f4a05d6b7f16c68a7d7b2cc9cddefc0",
+              "range": {
+                "start": 5,
+                "end": 17,
+                "hash": "6e650f1669d174721aac9c925a0eba194546e9f6"
+              }
+            }
+          }
+        },
+        "f8c56805f156": {
+          "text": "`AGENTS.md` and `docs/ARCHITECTURE.md` are pinned with dossier-scribe through symlinks in `dossiers/`. After changing a cited file run `dossier-scribe check`...",
+          "line": 35,
+          "specs": [
+            "dossier-scribe.json",
+            ".github/workflows/upkeep.yml:50-80"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "dossier-scribe.json": {
+              "path": "dossier-scribe.json",
+              "blob": "dc9561ab393888c4142c08ce0c5aa2aa17f67c86",
+              "commit": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e"
+            },
+            ".github/workflows/upkeep.yml": {
+              "path": ".github/workflows/upkeep.yml",
+              "blob": "0575b86140dccbb2c257c5ff93f41d644de84006",
+              "commit": "d2bc58949f4a05d6b7f16c68a7d7b2cc9cddefc0",
+              "range": {
+                "start": 50,
+                "end": 80,
+                "hash": "6209d1331b3ffc37fa755b1e0db9ab5c71b3edd1"
+              }
+            }
+          }
+        },
+        "7b62846d7e0b": {
+          "text": "The release guard tests skip when there is nothing to check. `TestReleaseSignaturesVerify` skips without a signed `hotend-agent-linux-<arch>` and `.sig` in t...",
+          "line": 39,
+          "specs": [
+            "main_test.go:103-155",
+            ".github/workflows/ci.yml:32-34"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main_test.go": {
+              "path": "main_test.go",
+              "blob": "c9ca0a5c8e6b010f19c5b65184110f3198f8b012",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 103,
+                "end": 155,
+                "hash": "bf768e91125f77318cd0353abe8aa0ba365b0a24"
+              }
+            },
+            ".github/workflows/ci.yml": {
+              "path": ".github/workflows/ci.yml",
+              "blob": "3ab706bb5cde79e88652823336ebbe0a05ea433f",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 32,
+                "end": 34,
+                "hash": "14e83760188c7f88151fcb59ba77e3a713524e66"
+              }
+            }
+          }
+        },
+        "6a384ab93781": {
+          "text": "`-version` must print exactly `agentVersion`. The updater test-runs the downloaded binary with `-version` and discards it on a mismatch, so a binary built be...",
+          "line": 40,
+          "specs": [
+            "main.go:696-701",
+            "main_test.go:141-155"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 696,
+                "end": 701,
+                "hash": "03ca9c51e69bdd11099d178c17f8db3e63c5b698"
+              }
+            },
+            "main_test.go": {
+              "path": "main_test.go",
+              "blob": "c9ca0a5c8e6b010f19c5b65184110f3198f8b012",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 141,
+                "end": 155,
+                "hash": "e62339f2f1f856c6a462c8c69eb12d33de748b5b"
+              }
+            }
+          }
+        },
+        "f618fc853769": {
+          "text": "Rollback depends on `<binary>.prev` and the probation fields in the state file. A new binary has 15 minutes or 3 boots to reach the relay, otherwise `revertT...",
+          "line": 41,
+          "specs": [
+            "main.go:325-331",
+            "main.go:464-492",
+            "main.go:702-714"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 325,
+                "end": 331,
+                "hash": "e39b416bbfa02683e00405321d90373798c34cd7"
+              }
+            },
+            "main.go:464-492": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 464,
+                "end": 492,
+                "hash": "dcd0626018106eee6213f435e9463dece5e685ef"
+              }
+            },
+            "main.go:702-714": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 702,
+                "end": 714,
+                "hash": "8b736f29ba165fd4b49162a08557ea56da2a51f5"
+              }
+            }
+          }
+        },
+        "2280bd3ab125": {
+          "text": "The first thing `main` does is run the probation check and start the update loop, before any check that can exit. Keep that order, because it lets a bad rele...",
+          "line": 42,
+          "specs": [
+            "main.go:274-280"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 274,
+                "end": 280,
+                "hash": "5b7d18340253081f59c111af86d0382167cac492"
+              }
+            }
+          }
+        },
+        "be2f310e1543": {
+          "text": "The relay URL must be `wss://`, or start with `ws://127.0.0.1` or `ws://localhost`. Anything else makes the agent exit.",
+          "line": 43,
+          "specs": [
+            "main.go:285-289"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 285,
+                "end": 289,
+                "hash": "776e313a958c6553bbd5356c56adbb673a38afe4"
+              }
+            }
+          }
+        },
+        "d015ac4e4710": {
+          "text": "The tunnel check must dial the IP it validated, not the host name again, or DNS rebinding reopens the hole.",
+          "line": 44,
+          "specs": [
+            "main.go:950-970",
+            "main.go:977-982",
+            "main_test.go:330-356"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 950,
+                "end": 970,
+                "hash": "0719afb2b16baae4745e1f60e90c0b15eab780cd"
+              }
+            },
+            "main.go:977-982": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 977,
+                "end": 982,
+                "hash": "653e4b8008812c71251247b3bf8f4abe2893b015"
+              }
+            },
+            "main_test.go": {
+              "path": "main_test.go",
+              "blob": "c9ca0a5c8e6b010f19c5b65184110f3198f8b012",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 330,
+                "end": 356,
+                "hash": "1b894b0604def5b09c8325bf3fe25b613be314ee"
+              }
+            }
+          }
+        },
+        "f40da44e5dab": {
+          "text": "Relay paths arrive already percent-encoded. `buildLocalURL` sets `Path` (decoded) and `RawPath` (as received) together; setting only `Path` turns `%20` into ...",
+          "line": 45,
+          "specs": [
+            "main.go:1395-1407",
+            "main_test.go:271-308"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 1395,
+                "end": 1407,
+                "hash": "cc873864c8b66b821ebcf74d97cc8f284285f968"
+              }
+            },
+            "main_test.go": {
+              "path": "main_test.go",
+              "blob": "c9ca0a5c8e6b010f19c5b65184110f3198f8b012",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 271,
+                "end": 308,
+                "hash": "2930101197ae6e6912ad0c721160154bb5e2bf45"
+              }
+            }
+          }
+        },
+        "504252fbd0b6": {
+          "text": "Exactly one component counts filament. With Moonraker `[spoolman]` configured, Moonraker counts and the agent only mirrors the active spool every 60 s; witho...",
+          "line": 46,
+          "specs": [
+            "main.go:1506-1544",
+            "main.go:1618-1620"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 1506,
+                "end": 1544,
+                "hash": "3944555a76fcb62ce8136e9fa8b8432673447b23"
+              }
+            },
+            "main.go:1618-1620": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 1618,
+                "end": 1620,
+                "hash": "c98bd15ca0906f96513d52f2252e16bb3a17d86f"
+              }
+            }
+          }
+        },
+        "4bae437de687": {
+          "text": "The webcam URL the relay sets is not checked against private ranges, and the response goes back to the relay. This is documented as a known trust limit, so c...",
+          "line": 47,
+          "specs": [
+            "main.go:161-177",
+            "main.go:1176-1197",
+            "SECURITY.md:17"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 161,
+                "end": 177,
+                "hash": "7a6bb545f5df9d96377abdd67cf3992ce108bfcb"
+              }
+            },
+            "main.go:1176-1197": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 1176,
+                "end": 1197,
+                "hash": "fd54c282afc2aa628f03d54e5c32ee50cda086fe"
+              }
+            },
+            "SECURITY.md": {
+              "path": "SECURITY.md",
+              "blob": "1d4bcb34c4135fec51bb02c60076445c4c88336b",
+              "commit": "003f82fca660faaa4c8749476571c1b1a87d3b27",
+              "range": {
+                "start": 17,
+                "end": 17,
+                "hash": "1c77176023b74512ab81924f16f3b0898bd50963"
+              }
+            }
+          }
+        },
+        "f4175c18b35a": {
+          "text": "`scripts/verify-agent-release.mjs` reads the trusted keys from the `updatePubKeysHex` block, and the reproducible workflow takes every 64-character hex strin...",
+          "line": 48,
+          "specs": [
+            "scripts/verify-agent-release.mjs:38-42",
+            ".github/workflows/reproducible.yml:83-91"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "scripts/verify-agent-release.mjs": {
+              "path": "scripts/verify-agent-release.mjs",
+              "blob": "929846aab0269c3cd12336d7f7d26a5e8f7d1f67",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 38,
+                "end": 42,
+                "hash": "6f487c54b98d58f6b71ea8398c7e55f3b61b9842"
+              }
+            },
+            ".github/workflows/reproducible.yml": {
+              "path": ".github/workflows/reproducible.yml",
+              "blob": "80c3db72ba4cd0453279d3eb61b1a41d078a5398",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 83,
+                "end": 91,
+                "hash": "e2ab2e6d0ba81034b67477d941e90e77195a8d41"
+              }
+            }
+          }
+        },
+        "63c481156a53": {
+          "text": "The reproducible workflow pins Go 1.22.2 and sets `GOARM=7`, and a Go bump needs the pin changed there. The Makefile `arm` target also sets `GOARM=7`, but th...",
+          "line": 49,
+          "specs": [
+            ".github/workflows/reproducible.yml:50-62",
+            "Makefile:26",
+            ".github/workflows/ci.yml:37-38"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            ".github/workflows/reproducible.yml": {
+              "path": ".github/workflows/reproducible.yml",
+              "blob": "80c3db72ba4cd0453279d3eb61b1a41d078a5398",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 50,
+                "end": 62,
+                "hash": "ea9e0386760f344e86f0b9dde11d0a4b738f751c"
+              }
+            },
+            "Makefile": {
+              "path": "Makefile",
+              "blob": "23443391a99126982af8006d67f8185673c21477",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 26,
+                "end": 26,
+                "hash": "2985b364015b583f57306baf7a53c652462a3772"
+              }
+            },
+            ".github/workflows/ci.yml": {
+              "path": ".github/workflows/ci.yml",
+              "blob": "3ab706bb5cde79e88652823336ebbe0a05ea433f",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 37,
+                "end": 38,
+                "hash": "52a5c8124f6fc46f815b6041984d2a9a997903b5"
+              }
+            }
+          }
+        },
+        "db804c3f0a53": {
+          "text": "`restartSelf` uses `syscall.Exec` in `main.go`, so this tree builds for unix targets only.",
+          "line": 50,
+          "specs": [
+            "main.go:733-739"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 733,
+                "end": 739,
+                "hash": "ba673eda9fa8acc4c5c5d3ccceddaae0b14aaca0"
+              }
+            }
+          }
+        },
+        "3a57e6f1a65f": {
+          "text": "The README transcript and `docs/trust.md` describe what the agent sends and reaches, read from `main.go`. A change to that behaviour needs those updated, and...",
+          "line": 51,
+          "specs": [
+            "docs/trust.md:3",
+            ".github/workflows/ci.yml:49-56"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "docs/trust.md": {
+              "path": "docs/trust.md",
+              "blob": "5d89992aeb5608c4ebfd06c334b0e0a7d6c93c27",
+              "commit": "d2bc58949f4a05d6b7f16c68a7d7b2cc9cddefc0",
+              "range": {
+                "start": 3,
+                "end": 3,
+                "hash": "16fa8aafe94b6c8ba686bdc8ba43f4ce59c16286"
+              }
+            },
+            ".github/workflows/ci.yml": {
+              "path": ".github/workflows/ci.yml",
+              "blob": "3ab706bb5cde79e88652823336ebbe0a05ea433f",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 49,
+                "end": 56,
+                "hash": "6eb02c9e57de45768bbf870df8d1c9a637433150"
+              }
+            }
+          }
+        },
+        "40a8171e0360": {
+          "text": "Dependabot covers GitHub Actions only, because `go.mod` is overwritten from upstream.",
+          "line": 52,
+          "specs": [
+            ".github/dependabot.yml:2-6"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            ".github/dependabot.yml": {
+              "path": ".github/dependabot.yml",
+              "blob": "dbf7838a36002e9934d2047415eff351928eda87",
+              "commit": "9e6e68164cd1cc466693ae07f6f3e3a28d988a1f",
+              "range": {
+                "start": 2,
+                "end": 6,
+                "hash": "3adbcc0e6d076336df84ca0752d50e5835b0e1df"
+              }
+            }
+          }
+        }
+      },
+      "pinnedAt": "2026-11-22T09:17:57.529Z",
+      "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e"
+    },
+    "hotend-agent-architecture": {
+      "claims": {
+        "e316d38c0470": {
+          "text": "A single static Go binary (Go 1.22, one dependency, `gorilla/websocket`) that runs on a printer host and bridges the Hotend relay to the local Moonraker. It ...",
+          "line": 11,
+          "specs": [
+            "go.mod",
+            "main.go:1-4",
+            "README.md:49"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "go.mod": {
+              "path": "go.mod",
+              "blob": "a2607737b668abf5b977e7138a191f3a9a4c9530",
+              "commit": "44a3b5f3454e1107a1147be66f07ff1859211cba"
+            },
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 1,
+                "end": 4,
+                "hash": "f58508c9712de43ece209ce974beb4479b2f39e2"
+              }
+            },
+            "README.md": {
+              "path": "README.md",
+              "blob": "9e7b5ba258d7ce6312d03482cfd201f3db9cea12",
+              "commit": "d2bc58949f4a05d6b7f16c68a7d7b2cc9cddefc0",
+              "range": {
+                "start": 49,
+                "end": 49,
+                "hash": "893e07bc78737e3b590a6afbdddcf41fccd21755"
+              }
+            }
+          }
+        },
+        "ce25a340c922": {
+          "text": "Agent: `main.go`, `package main`. Startup is `main` (probation check, update loop, relay URL check, state load, background workers, then a reconnect loop).",
+          "line": 26,
+          "specs": [
+            "main.go:269-323"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 269,
+                "end": 323,
+                "hash": "0d4c1140445a3b8c315f8af6154d33f4c3925be4"
+              }
+            }
+          }
+        },
+        "40c459edb1ab": {
+          "text": "Relay connection: `connect` dials the relay, pings every 30 s with a 70 s read deadline and hands each frame to `dispatch`.",
+          "line": 27,
+          "specs": [
+            "main.go:779-854",
+            "main.go:864-948"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 779,
+                "end": 854,
+                "hash": "da7b9da74b7b4f38129d398c4dba68afa047b40e"
+              }
+            },
+            "main.go:864-948": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 864,
+                "end": 948,
+                "hash": "4a35469a4e7599428cf1ddb5ec473a3fc3467f97"
+              }
+            }
+          }
+        },
+        "7da23bee0345": {
+          "text": "Request proxy: `doFetch` forwards a relay request to Moonraker or the webcam and streams the answer back. `doWSOpen` does the same for a Moonraker WebSocket.",
+          "line": 28,
+          "specs": [
+            "main.go:1018-1090",
+            "main.go:1722-1744"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 1018,
+                "end": 1090,
+                "hash": "f425f4de7ea0e5a16e95de746bfa1c2b98d3b29b"
+              }
+            },
+            "main.go:1722-1744": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 1722,
+                "end": 1744,
+                "hash": "263a784a9388813502cdcf6a838ac4230fc55f7f"
+              }
+            }
+          }
+        },
+        "88fb08421fe9": {
+          "text": "LAN tunnels: `doTCPOpen` opens raw TCP to a host and port the relay names, limited to private, loopback and link-local addresses.",
+          "line": 29,
+          "specs": [
+            "main.go:950-1005"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 950,
+                "end": 1005,
+                "hash": "d419265e252d8da33d4db08b0c43eef5a6c1321f"
+              }
+            }
+          }
+        },
+        "5dbd6b8ae14a": {
+          "text": "Webcam: `detectWebcam` asks Moonraker's webcam list, then probes common MJPEG and HLS paths, and `reportDetectedWebcam` tells the relay. `buildWebcamURL` and...",
+          "line": 30,
+          "specs": [
+            "main.go:1176-1229",
+            "main.go:1287-1381"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 1176,
+                "end": 1229,
+                "hash": "4350cb0242820a320464eb70987b29a5015ffafb"
+              }
+            },
+            "main.go:1287-1381": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 1287,
+                "end": 1381,
+                "hash": "d668ea4166e3b04c90db223b40f310af05aaf342"
+              }
+            }
+          }
+        },
+        "43a16f15411e": {
+          "text": "Spoolman: a local endpoint on `127.0.0.1` (`serveSpoolman`), the `/server/spoolman/*` emulation (`handleMoonrakerSpoolman`), the active-spool sync into Moonr...",
+          "line": 31,
+          "specs": [
+            "main.go:1092-1160",
+            "main.go:1444-1669"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 1092,
+                "end": 1160,
+                "hash": "ec24007652a24691a6e9ee64685ce2ace0f1583d"
+              }
+            },
+            "main.go:1444-1669": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 1444,
+                "end": 1669,
+                "hash": "c815b3948b2c6f00eba87ac6d87a261e8e0f3261"
+              }
+            }
+          }
+        },
+        "836ea4544d97": {
+          "text": "Self-update and rollback: `updateLoop`, `selfUpdate`, `fetchReleaseManifest`, `signedByTrustedKey`, `checkPendingUpdate`, `watchPendingUpdate`, `revertTo` an...",
+          "line": 32,
+          "specs": [
+            "main.go:325-755"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 325,
+                "end": 755,
+                "hash": "96b0f72a7a776181fd9cbc043c9418535b847263"
+              }
+            }
+          }
+        },
+        "6a595c887a08": {
+          "text": "`verify-sig/`: a dependency-free ed25519 checker for the installer's first install. It takes a file, a hex signature file and one or more hex public keys, an...",
+          "line": 33,
+          "specs": [
+            "verify-sig/main.go:1-57"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "verify-sig/main.go": {
+              "path": "verify-sig/main.go",
+              "blob": "96d8aa80d6b8b1ea2a0e438b18c96143a2b585a9",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 1,
+                "end": 57,
+                "hash": "0df30dee6988a86e3f41750dd0d2791cb95862e4"
+              }
+            }
+          }
+        },
+        "731b0c14a580": {
+          "text": "Scripts: `stub-relay.mjs` (stand-in relay and Moonraker), `verify-agent-release.mjs` (checks what the relay serves) and `gate-mutation.mjs` (mutation testing...",
+          "line": 34,
+          "specs": [
+            "scripts/stub-relay.mjs:1-10",
+            "scripts/verify-agent-release.mjs:1-20",
+            "scripts/gate-mutation.mjs:1-16"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "scripts/stub-relay.mjs": {
+              "path": "scripts/stub-relay.mjs",
+              "blob": "29d0ca2b873b4ee4d36acbeae7946ab09050e26e",
+              "commit": "d2bc58949f4a05d6b7f16c68a7d7b2cc9cddefc0",
+              "range": {
+                "start": 1,
+                "end": 10,
+                "hash": "a4a128802fa69879710d6df9e214a4fd17365581"
+              }
+            },
+            "scripts/verify-agent-release.mjs": {
+              "path": "scripts/verify-agent-release.mjs",
+              "blob": "929846aab0269c3cd12336d7f7d26a5e8f7d1f67",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 1,
+                "end": 20,
+                "hash": "e0d2b480c640e70088ab1283a6ac5f1744d8d376"
+              }
+            },
+            "scripts/gate-mutation.mjs": {
+              "path": "scripts/gate-mutation.mjs",
+              "blob": "158f4b4c2b4d4a7dd82ddee3671bcbef32a68af7",
+              "commit": "9700e2083c9fe7cc0c44dcb75ca13e15e67beb1b",
+              "range": {
+                "start": 1,
+                "end": 16,
+                "hash": "2f11e767a4559d59d503f8443756d4173a8dea36"
+              }
+            }
+          }
+        },
+        "dddceb17e23d": {
+          "text": "`systemd/hotend-agent.service`: an example system unit for hand installs, run as a non-root user with `NoNewPrivileges`.",
+          "line": 35,
+          "specs": [
+            "systemd/hotend-agent.service"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "systemd/hotend-agent.service": {
+              "path": "systemd/hotend-agent.service",
+              "blob": "4b8e8229bb4d8337d51ead37f50df9ef6385e697",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0"
+            }
+          }
+        },
+        "686208801284": {
+          "text": "CI in `.github/workflows/`: `ci.yml` (gofmt, vet, builds, tests, stub-relay run), `reproducible.yml` (rebuilds a published release and compares bytes) and `u...",
+          "line": 36,
+          "specs": [
+            ".github/workflows/ci.yml",
+            ".github/workflows/reproducible.yml",
+            ".github/workflows/upkeep.yml"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            ".github/workflows/ci.yml": {
+              "path": ".github/workflows/ci.yml",
+              "blob": "3ab706bb5cde79e88652823336ebbe0a05ea433f",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0"
+            },
+            ".github/workflows/reproducible.yml": {
+              "path": ".github/workflows/reproducible.yml",
+              "blob": "80c3db72ba4cd0453279d3eb61b1a41d078a5398",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0"
+            },
+            ".github/workflows/upkeep.yml": {
+              "path": ".github/workflows/upkeep.yml",
+              "blob": "0575b86140dccbb2c257c5ff93f41d644de84006",
+              "commit": "d2bc58949f4a05d6b7f16c68a7d7b2cc9cddefc0"
+            }
+          }
+        },
+        "8c6d0fcddc87": {
+          "text": "Not in this repository: the relay, the app and the installer script.",
+          "line": 37,
+          "specs": [
+            "README.md:82",
+            "CONTRIBUTING.md:7"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "README.md": {
+              "path": "README.md",
+              "blob": "9e7b5ba258d7ce6312d03482cfd201f3db9cea12",
+              "commit": "d2bc58949f4a05d6b7f16c68a7d7b2cc9cddefc0",
+              "range": {
+                "start": 82,
+                "end": 82,
+                "hash": "2d60618470b05bb86f534ed71d5db0cfc2cd9a74"
+              }
+            },
+            "CONTRIBUTING.md": {
+              "path": "CONTRIBUTING.md",
+              "blob": "4b11cb36aac8d36975c74bcb7d4b37fede8a6727",
+              "commit": "d2bc58949f4a05d6b7f16c68a7d7b2cc9cddefc0",
+              "range": {
+                "start": 7,
+                "end": 7,
+                "hash": "066c0cdf7a6cf18138da39026fa7f57305d2e654"
+              }
+            }
+          }
+        },
+        "c181164806bf": {
+          "text": "Start: `main` runs `checkPendingUpdate` and starts `updateLoop` first, then exits unless `HOTEND_RELAY_URL` is set and is `wss://` (or `ws://` to 127.0.0.1 o...",
+          "line": 41,
+          "specs": [
+            "main.go:274-322"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 274,
+                "end": 322,
+                "hash": "98c4c1cfdd887edd8d807e3d1951a7cf90d4848f"
+              }
+            }
+          }
+        },
+        "33c79f00c98e": {
+          "text": "Connect: the agent dials `<relay>/__relay/agent?printer=<id>`, adding `&claim=<token>` while `HOTEND_CLAIM` is set, with the version in `X-Hotend-Agent-Versi...",
+          "line": 42,
+          "specs": [
+            "main.go:779-796"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 779,
+                "end": 796,
+                "hash": "e8c71433dd9c3be42b0442db8716d1a91f32f2d4"
+              }
+            }
+          }
+        },
+        "e6dbb1ae69d5": {
+          "text": "Request: the relay sends `req`, then `body` chunks, then `end`. The agent builds the local URL, strips forwarding and auth headers, calls Moonraker (or the w...",
+          "line": 43,
+          "specs": [
+            "main.go:898-917",
+            "main.go:1007-1090"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 898,
+                "end": 917,
+                "hash": "65ac9a39928578fcd0b10eccea5789ba2666207b"
+              }
+            },
+            "main.go:1007-1090": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 1007,
+                "end": 1090,
+                "hash": "830be732e60d815e178f445f71967ecaf5fae9f5"
+              }
+            }
+          }
+        },
+        "6444a83f06a1": {
+          "text": "Spoolman: requests under `/server/spoolman/` are answered by the agent from the central store over the relay (`sm` out, `smres` back), and never reach Moonra...",
+          "line": 44,
+          "specs": [
+            "main.go:1018-1026",
+            "main.go:1411-1504"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 1018,
+                "end": 1026,
+                "hash": "ba7615c1869756955029c3e6cdc52b7956f2a58c"
+              }
+            },
+            "main.go:1411-1504": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 1411,
+                "end": 1504,
+                "hash": "835062971462b751ede53e6a6a9164cbd2b807ba"
+              }
+            }
+          }
+        },
+        "046b23549b6b": {
+          "text": "Moonraker WebSocket: `wsopen` dials Moonraker, `wsmsg` writes into it, frames from Moonraker go back as `body`, and `wsclose` ends it.",
+          "line": 45,
+          "specs": [
+            "main.go:918-935",
+            "main.go:1722-1744"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 918,
+                "end": 935,
+                "hash": "f6f44f2d4eb0b252f9cd1ac39f3d15c1be5496bc"
+              }
+            },
+            "main.go:1722-1744": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 1722,
+                "end": 1744,
+                "hash": "263a784a9388813502cdcf6a838ac4230fc55f7f"
+              }
+            }
+          }
+        },
+        "5ade99a51d7d": {
+          "text": "Tunnel: `tcpopen` resolves and checks the host, dials the checked IP with a 10 s timeout, answers `tcpready` or `tcperr`, then pumps `tcpdata` both ways unti...",
+          "line": 46,
+          "specs": [
+            "main.go:936-946",
+            "main.go:972-1005"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 936,
+                "end": 946,
+                "hash": "26265effab9b7acbe54776a024f59c06ef81dd1a"
+              }
+            },
+            "main.go:972-1005": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 972,
+                "end": 1005,
+                "hash": "bee1d44150b58954d25c218f2d842732de2303d3"
+              }
+            }
+          }
+        },
+        "c2754ec977e9": {
+          "text": "Config frames: `config` sets or clears the webcam URL override, and `device-secret` stores the secret in the state file.",
+          "line": 47,
+          "specs": [
+            "main.go:870-890"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 870,
+                "end": 890,
+                "hash": "f1ade3f334975cdc16296b330252d8f3c4041b84"
+              }
+            }
+          }
+        },
+        "d6469833afdc": {
+          "text": "Update: about every 6 hours plus up to an hour of jitter, the agent reads `/agent-bin/version`, ignores anything not strictly newer or already blacklisted, c...",
+          "line": 48,
+          "specs": [
+            "main.go:344-355",
+            "main.go:590-722"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 344,
+                "end": 355,
+                "hash": "cf030a4eed438029b5e58214f97fe31b2e1e34d4"
+              }
+            },
+            "main.go:590-722": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 590,
+                "end": 722,
+                "hash": "92d308f4dcab5c3096cd33248ca39342b35df931"
+              }
+            }
+          }
+        },
+        "96547c4cbd02": {
+          "text": "Probation ends on the first relay connection. Otherwise `revertTo` restores `.prev`, blacklists the version and restarts.",
+          "line": 49,
+          "specs": [
+            "main.go:799-807",
+            "main.go:375-427",
+            "main.go:464-492"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 799,
+                "end": 807,
+                "hash": "b3b1723849015fe1fecc27d0b4b6a7a7e51dafba"
+              }
+            },
+            "main.go:375-427": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 375,
+                "end": 427,
+                "hash": "6aba8c6fa56099f2c13355130ff7d03ce8cd2ac2"
+              }
+            },
+            "main.go:464-492": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 464,
+                "end": 492,
+                "hash": "dcd0626018106eee6213f435e9463dece5e685ef"
+              }
+            }
+          }
+        },
+        "e448b33cae7d": {
+          "text": "State file: JSON at `$XDG_CONFIG_HOME/hotend/agent.json`, or `~/.config/hotend/agent.json`, or the path in `HOTEND_AGENT_STATE`. It holds `printerId`, `devic...",
+          "line": 53,
+          "specs": [
+            "main.go:82-89",
+            "main.go:188-199",
+            "main.go:236-242"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 82,
+                "end": 89,
+                "hash": "8123cf21082653d43151855a548d0449ad409c52"
+              }
+            },
+            "main.go:188-199": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 188,
+                "end": 199,
+                "hash": "774761f52189982ba1d889c01210e87a071a3fbe"
+              }
+            },
+            "main.go:236-242": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 236,
+                "end": 242,
+                "hash": "a855b5abb435879fdebccf04e765f70ae1b39894"
+              }
+            }
+          }
+        },
+        "9f88940fee50": {
+          "text": "Legacy state at `~/.hotend-agent/agent.json` and `~/.hotend-agent.json` is read when the durable path has no identity, and never written.",
+          "line": 54,
+          "specs": [
+            "main.go:91-98",
+            "main.go:206-225"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 91,
+                "end": 98,
+                "hash": "c6c30aadaf3bd0afe7a212a41d827a0207f5c51a"
+              }
+            },
+            "main.go:206-225": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 206,
+                "end": 225,
+                "hash": "76c2b8a24601059f7c36f3cf133b1d0fc0219fe0"
+              }
+            }
+          }
+        },
+        "262461cbe112": {
+          "text": "Next to the running binary: `<binary>.new` while an update is verified, and `<binary>.prev`, the copy a rollback restores.",
+          "line": 55,
+          "specs": [
+            "main.go:692-709",
+            "main.go:462-492"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 692,
+                "end": 709,
+                "hash": "7775af087489312fb399bebe11ae31a90446dbd2"
+              }
+            },
+            "main.go:462-492": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 462,
+                "end": 492,
+                "hash": "bde300d5e6bb61a963f65ed875c018cdb07ef96d"
+              }
+            }
+          }
+        },
+        "93d1c443e93d": {
+          "text": "No database, cache or log file. Everything else is in memory, and the agent writes to stdout and stderr only.",
+          "line": 56,
+          "specs": [
+            "main.go:134-166"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 134,
+                "end": 166,
+                "hash": "c70bb7185251efa67a6726b32ec3a0cf81b5a642"
+              }
+            }
+          }
+        },
+        "cb9e2ee4f0ca": {
+          "text": "No analytics.",
+          "line": 57,
+          "specs": [
+            "README.md:62"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "README.md": {
+              "path": "README.md",
+              "blob": "9e7b5ba258d7ce6312d03482cfd201f3db9cea12",
+              "commit": "d2bc58949f4a05d6b7f16c68a7d7b2cc9cddefc0",
+              "range": {
+                "start": 62,
+                "end": 62,
+                "hash": "aaa3c2dafaeff40277f24b8aebec63d8a721b613"
+              }
+            }
+          }
+        },
+        "f1f8e7913ba8": {
+          "text": "Agent to relay: the device secret, issued by the relay in a `device-secret` frame, goes in an `Authorization: Bearer` header and never in the URL. The claim ...",
+          "line": 61,
+          "specs": [
+            "main.go:140-143",
+            "main.go:779-796",
+            "main.go:881-890"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 140,
+                "end": 143,
+                "hash": "9b97ddee4a1b01b2d074fe4b6d64c869e296b9ad"
+              }
+            },
+            "main.go:779-796": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 779,
+                "end": 796,
+                "hash": "e8c71433dd9c3be42b0442db8716d1a91f32f2d4"
+              }
+            },
+            "main.go:881-890": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 881,
+                "end": 890,
+                "hash": "74b6bcb2de4b84bc75213f068a2f4d79fa4dc52e"
+              }
+            }
+          }
+        },
+        "d881c3b12a49": {
+          "text": "The relay URL must be `wss://`, with `ws://` only for 127.0.0.1 and localhost.",
+          "line": 62,
+          "specs": [
+            "main.go:285-289"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 285,
+                "end": 289,
+                "hash": "776e313a958c6553bbd5356c56adbb673a38afe4"
+              }
+            }
+          }
+        },
+        "d0e43d321e10": {
+          "text": "Relay to agent: there is no allowlist of Moonraker paths or methods. The agent checks only that a path starts with a single `/`, then sends it to `HOTEND_LOC...",
+          "line": 63,
+          "specs": [
+            "main.go:100-108",
+            "main.go:1383-1409"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 100,
+                "end": 108,
+                "hash": "6c9cfa8128cd3e384a9c02f9fb7e1bde87127d4b"
+              }
+            },
+            "main.go:1383-1409": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 1383,
+                "end": 1409,
+                "hash": "498a2612514f6e239a2f97a81df9001954fb755a"
+              }
+            }
+          }
+        },
+        "7cab4c76c713": {
+          "text": "Webcam: the relay can set the URL, and it is not checked against private ranges.",
+          "line": 64,
+          "specs": [
+            "main.go:870-880",
+            "main.go:1181-1197"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 870,
+                "end": 880,
+                "hash": "c05a7f9a6343a71bde477a24fc8e5684ecdaa391"
+              }
+            },
+            "main.go:1181-1197": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 1181,
+                "end": 1197,
+                "hash": "a6be0faa8c4761f0f5b227a99f76561ac2a2ea54"
+              }
+            }
+          }
+        },
+        "83a309950e41": {
+          "text": "Tunnels: only hosts whose every resolved address is private, loopback or link-local, on ports 1 to 65535.",
+          "line": 65,
+          "specs": [
+            "main.go:959-982"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 959,
+                "end": 982,
+                "hash": "0b8e3d3e237f321f72c36429ab08b0dac7dd48df"
+              }
+            }
+          }
+        },
+        "db2e86327420": {
+          "text": "Spoolman endpoint: bound to `127.0.0.1`, no authentication, and WebSocket upgrades accept any origin.",
+          "line": 66,
+          "specs": [
+            "main.go:1096-1106"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 1096,
+                "end": 1106,
+                "hash": "11a9fcbea9de554f3fc8523eb4a9982abc09cf80"
+              }
+            }
+          }
+        },
+        "52aa1da3e1c4": {
+          "text": "Updates: accepted only with a valid ed25519 signature from one of two public keys compiled into `main.go`, over the binary and over a manifest that binds the...",
+          "line": 67,
+          "specs": [
+            "main.go:39-57",
+            "main.go:546-583",
+            "main.go:630-691"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 39,
+                "end": 57,
+                "hash": "9060e848b8a93ba7d93602610dbbd3390bf6b5e5"
+              }
+            },
+            "main.go:546-583": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 546,
+                "end": 583,
+                "hash": "071ec191f26f72919ffc5d7868438980e5d729bc"
+              }
+            },
+            "main.go:630-691": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 630,
+                "end": 691,
+                "hash": "dc382bda5b03654041ba994cc0e3585e588ff873"
+              }
+            }
+          }
+        },
+        "92acc6741b07": {
+          "text": "The agent runs as whichever user starts it and needs no privileges.",
+          "line": 68,
+          "specs": [
+            "systemd/hotend-agent.service:12-17"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "systemd/hotend-agent.service": {
+              "path": "systemd/hotend-agent.service",
+              "blob": "4b8e8229bb4d8337d51ead37f50df9ef6385e697",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 12,
+                "end": 17,
+                "hash": "926b1939c98dcf951aaca7d92e078063aaa60971"
+              }
+            }
+          }
+        },
+        "92bfe1577ebd": {
+          "text": "The Hotend relay at `HOTEND_RELAY_URL`: WebSocket `/__relay/agent`, and over HTTP `/agent-bin/version`, `/agent-bin/manifest`, `/agent-bin/manifest.sig`, `/a...",
+          "line": 72,
+          "specs": [
+            "main.go:436",
+            "main.go:547-562",
+            "main.go:606-677",
+            "main.go:780"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 436,
+                "end": 436,
+                "hash": "c1751b761307419ae1713d371c02128b07344696"
+              }
+            },
+            "main.go:547-562": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 547,
+                "end": 562,
+                "hash": "740f5fdd7792653234b6924a07cc2a2398cc66a5"
+              }
+            },
+            "main.go:606-677": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 606,
+                "end": 677,
+                "hash": "7929b1ff961ab2c2e9ce3632649ed9d6ca835558"
+              }
+            },
+            "main.go:780-780": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 780,
+                "end": 780,
+                "hash": "845a59cc22cf415f2da126483645c5f59aea41ad"
+              }
+            }
+          }
+        },
+        "d29e2328a6c4": {
+          "text": "Moonraker at `HOTEND_LOCAL_URL` (default `http://127.0.0.1:7125`): the relayed requests plus `/server/config`, `/server/webcams/list`, `/websocket` and `/ser...",
+          "line": 73,
+          "specs": [
+            "main.go:73",
+            "main.go:1291",
+            "main.go:1556",
+            "main.go:1595",
+            "main.go:1622"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 73,
+                "end": 73,
+                "hash": "68f918d3e2cde5582cc714dc96bf4bad56fb92c9"
+              }
+            },
+            "main.go:1291-1291": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 1291,
+                "end": 1291,
+                "hash": "579f03b87feaa83cb54a54812be0a8814a7af986"
+              }
+            },
+            "main.go:1556-1556": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 1556,
+                "end": 1556,
+                "hash": "61f554f8bd972dd1b21ca1b2c0b245c50a7b57db"
+              }
+            },
+            "main.go:1595-1595": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 1595,
+                "end": 1595,
+                "hash": "488510d04c32bc2668b916863c41aac05b963069"
+              }
+            },
+            "main.go:1622-1622": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 1622,
+                "end": 1622,
+                "hash": "d2c4501069e6bb010bc42c41c1d571d707ffafec"
+              }
+            }
+          }
+        },
+        "b339f903b5bd": {
+          "text": "The webcam streamer at `HOTEND_WEBCAM_URL` (default `http://127.0.0.1:8080`), plus the detected URL.",
+          "line": 74,
+          "specs": [
+            "main.go:74",
+            "main.go:161-177"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 74,
+                "end": 74,
+                "hash": "a9bed54d3ce08c587d61c28da41dadd67508c214"
+              }
+            },
+            "main.go:161-177": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 161,
+                "end": 177,
+                "hash": "7a6bb545f5df9d96377abdd67cf3992ce108bfcb"
+              }
+            }
+          }
+        },
+        "ed957e5e2d20": {
+          "text": "LAN hosts the relay asks for through a tunnel.",
+          "line": 75,
+          "specs": [
+            "main.go:972-988"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 972,
+                "end": 988,
+                "hash": "232c516bff5075e28a012b2e39a8c577b46f4437"
+              }
+            }
+          }
+        },
+        "27d0dfd0d6cf": {
+          "text": "Other environment variables: `HOTEND_CLAIM`, `HOTEND_AGENT_STATE`, `HOTEND_SPOOLMAN_PORT`, `HOTEND_AGENT_AUTO_UPDATE` (`off`, `0`, `false` or `no` disables s...",
+          "line": 76,
+          "specs": [
+            "main.go:75-89",
+            "main.go:136",
+            "main.go:595-598"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            "main.go": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 75,
+                "end": 89,
+                "hash": "3d55d5c28819a69588ed196840b1274993583d01"
+              }
+            },
+            "main.go:136-136": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 136,
+                "end": 136,
+                "hash": "6c774704a32177cdbaba4027b4d54f3039226239"
+              }
+            },
+            "main.go:595-598": {
+              "path": "main.go",
+              "blob": "e138cd6370bf36148c4f73f96126a91ab9364045",
+              "commit": "404f30989530f5ca93f2d0f1527668fca30f34d0",
+              "range": {
+                "start": 595,
+                "end": 598,
+                "hash": "69ed4ffee227a6222c9cf89687f9bba7269b59e6"
+              }
+            }
+          }
+        },
+        "6ecd5521e1b6": {
+          "text": "CI only: GitHub Actions, the lychee link checker and dossier-scribe, with `GITHUB_TOKEN`.",
+          "line": 77,
+          "specs": [
+            ".github/workflows/upkeep.yml:20-80"
+          ],
+          "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e",
+          "files": {
+            ".github/workflows/upkeep.yml": {
+              "path": ".github/workflows/upkeep.yml",
+              "blob": "0575b86140dccbb2c257c5ff93f41d644de84006",
+              "commit": "d2bc58949f4a05d6b7f16c68a7d7b2cc9cddefc0",
+              "range": {
+                "start": 20,
+                "end": 80,
+                "hash": "4f9e43db874dbc908a5bb919eabdfb2e0d2dc155"
+              }
+            }
+          }
+        }
+      },
+      "pinnedAt": "2026-11-22T09:17:57.670Z",
+      "head": "b893655ebb9fd584d6fb119a5cdb7c91217ca40e"
     }
   }
 }
