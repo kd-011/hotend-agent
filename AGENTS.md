@@ -26,7 +26,7 @@ The doc index is docs/README.md. Read docs/ARCHITECTURE.md before changing struc
 - One `package main` in `main.go` holds the whole agent, with tests in `main_test.go`. `verify-sig/` is a second `package main` in the same module. <!-- src: main.go:4, verify-sig/main.go:16, go.mod -->
 - Dependencies stay at the standard library plus `gorilla/websocket`. <!-- src: CONTRIBUTING.md:37, go.mod -->
 - Configuration is environment variables only, read once at package init. <!-- src: main.go:59-80 -->
-- A change to a guard (signature check, version check, rollback, local-only request targets) needs a test that fails when the guard is weakened. <!-- src: CONTRIBUTING.md:38, .github/PULL_REQUEST_TEMPLATE.md:7-9 -->
+- A change to a guard (signature check, version check, rollback, local-only request targets) needs a test that fails when the guard is weakened. <!-- src: CONTRIBUTING.md:38, .github/PULL_REQUEST_TEMPLATE.md:7-8 -->
 - Builds are `CGO_ENABLED=0 -trimpath -buildvcs=false -ldflags "-s -w"`. Keep them: they make the binary static and reproducible. <!-- src: Makefile:4-14 -->
 - Write state through `mutateState`, not by building an `agentState` and calling `saveState`, which drops fields the caller forgot. <!-- src: main.go:244-259 -->
 - The version is date-based (`YYYY.MM.DD.N`) in `agentVersion`. Only the maintainer cuts releases, so do not bump it. <!-- src: main.go:35-37, CONTRIBUTING.md:21 -->

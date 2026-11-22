@@ -38,7 +38,7 @@ flowchart LR
 
 ## Data flow
 
-- Start: `main` runs `checkPendingUpdate` and starts `updateLoop` first, then exits unless `HOTEND_RELAY_URL` is set and is `wss://` (or `ws://` to 127.0.0.1 or localhost), loads state, and starts the probation watcher, Spoolman endpoint, filament tracking and webcam detection. It then calls `connect` in a loop, with the pause doubling from 1 s up to 30 s. <!-- src: main.go:274-322 -->
+- Start: `main` runs `checkPendingUpdate` and starts `updateLoop` first, then exits unless `HOTEND_RELAY_URL` is set and is `wss://` (or `ws://` to 127.0.0.1 or localhost), loads state, and starts the probation watcher, Spoolman endpoint, filament tracking and webcam detection. It then calls `connect` in a loop, with a pause that starts at 1 s and doubles while it is under 30 s. <!-- src: main.go:274-322 -->
 - Connect: the agent dials `<relay>/__relay/agent?printer=<id>`, adding `&claim=<token>` while `HOTEND_CLAIM` is set, with the version in `X-Hotend-Agent-Version` and the device secret as a bearer token when it has one. <!-- src: main.go:779-796 -->
 - Request: the relay sends `req`, then `body` chunks, then `end`. The agent builds the local URL, strips forwarding and auth headers, calls Moonraker (or the webcam when the request targets it) and replies with `res`, `body` chunks and `end`. A `cancel` frame aborts the fetch. <!-- src: main.go:898-917, main.go:1007-1090 -->
 - Spoolman: requests under `/server/spoolman/` are answered by the agent from the central store over the relay (`sm` out, `smres` back), and never reach Moonraker. <!-- src: main.go:1018-1026, main.go:1411-1504 -->
